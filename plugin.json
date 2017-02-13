@@ -1,0 +1,9 @@
+{
+  "name": "ElasticExportKaufluxDE",
+  "description": "This plugin adds the format KaufluxDE to the Elastic Export.",
+  "namespace": "ElasticExportKaufluxDE",
+  "author": "plentymarkets",
+  "type": "export",
+  "serviceProvider": "ElasticExportKaufluxDE\\ElasticExportKaufluxDEServiceProvider",
+  "version": 0.1
+}
