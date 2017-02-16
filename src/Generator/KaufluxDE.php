@@ -70,19 +70,16 @@ class KaufluxDE extends CSVGenerator
 
     /**
      * KaufluxDE constructor.
-     * @param ElasticExportCoreHelper $elasticExportHelper
      * @param ArrayHelper $arrayHelper
      * @param PropertySelectionRepositoryContract $propertySelectionRepository
      * @param UrlBuilderRepositoryContract $urlBuilderRepository
      */
     public function __construct(
-        ElasticExportCoreHelper $elasticExportHelper,
         ArrayHelper $arrayHelper,
         PropertySelectionRepositoryContract $propertySelectionRepository,
         UrlBuilderRepositoryContract $urlBuilderRepository
     )
     {
-        $this->elasticExportHelper = $elasticExportHelper;
         $this->arrayHelper = $arrayHelper;
         $this->propertySelectionRepository = $propertySelectionRepository;
         $this->urlBuilderRepository = $urlBuilderRepository;
@@ -94,6 +91,7 @@ class KaufluxDE extends CSVGenerator
      */
     protected function generateContent($resultData, array $formatSettings = [])
     {
+        $this->elasticExportHelper = pluginApp(ElasticExportCoreHelper::class);
         if(is_array($resultData) && count($resultData['documents']) > 0)
         {
             $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
