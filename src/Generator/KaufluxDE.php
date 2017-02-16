@@ -145,9 +145,9 @@ class KaufluxDE extends CSVGenerator
             if(is_array($variationIdList) && count($variationIdList) > 0)
             {
                 /**
-                 * @var \ElasticExport\ES_IDL_ResultList\KaufluxDE $idlResultList
+                 * @var \ElasticExportKaufluxDE\IDL_ResultList\KaufluxDE $idlResultList
                  */
-                $idlResultList = pluginApp(\ElasticExport\ES_IDL_ResultList\KaufluxDE::class);
+                $idlResultList = pluginApp(\ElasticExportKaufluxDE\IDL_ResultList\KaufluxDE::class);
                 $idlResultList = $idlResultList->getResultList($variationIdList, $settings);
             }
 
