@@ -5,5 +5,9 @@
   "author": "plentymarkets",
   "type": "export",
   "serviceProvider": "ElasticExportKaufluxDE\\ElasticExportKaufluxDEServiceProvider",
-  "version": 0.1
+  "version": 0.1,
+  "require":
+  {
+    "ElasticExportCore": 0.1
+  }
 }

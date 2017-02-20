@@ -92,7 +92,7 @@ class KaufluxDE extends CSVGenerator
     protected function generateContent($resultData, array $formatSettings = [])
     {
         $this->elasticExportHelper = pluginApp(ElasticExportCoreHelper::class);
-        if(is_array($resultData) && count($resultData['documents']) > 0)
+        if(is_array($resultData['documents']) && count($resultData['documents']) > 0)
         {
             $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 
@@ -188,7 +188,7 @@ class KaufluxDE extends CSVGenerator
                     'Bezeichnung' 		=> $this->elasticExportHelper->getName($item, $settings), //. ' ' . $item->variationBase->variationName, todo maybe add the attribute value name
                     'KurzText' 			=> $this->elasticExportHelper->getPreviewText($item, $settings),
                     'DetailText' 		=> $this->elasticExportHelper->getDescription($item, $settings) . ' ' . $this->getPropertyDescription($item),
-                    'Keywords' 			=> $item['data']['texts']['keywords'],
+                    'Keywords' 			=> $item['data']['texts'][0]['keywords'],
                     'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
                     'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
                     'Bild3' 			=> count($imageList) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
@@ -243,7 +243,7 @@ class KaufluxDE extends CSVGenerator
     {
         if(!array_key_exists($item['data']['item']['id'], $this->itemPropertyCache))
         {
-            $characterMarketComponentList = $this->elasticExportHelper->getItemCharactersByComponent($item, self::KAUFLUX_DE, 1);
+            $characterMarketComponentList = $this->elasticExportHelper->getItemCharactersByComponent($this->idlVariations[$item['id']], self::KAUFLUX_DE, 1);
 
             $list = [];
 
