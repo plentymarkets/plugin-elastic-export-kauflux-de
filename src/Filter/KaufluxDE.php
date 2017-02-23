@@ -2,11 +2,11 @@
 
 namespace ElasticExportKaufluxDE\Filter;
 
-use Plenty\Modules\DataExchange\Contracts\FiltersForElasticSearchContract;
+use Plenty\Modules\DataExchange\Contracts\FiltersForElasticSearch;
 
 use Plenty\Plugin\Application;
 
-class KaufluxDE extends FiltersForElasticSearchContract
+class KaufluxDE extends FiltersForElasticSearch
 {
     /**
      * @var Application $app
