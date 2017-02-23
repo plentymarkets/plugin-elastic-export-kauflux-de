@@ -2,7 +2,7 @@
 
 namespace ElasticExportKaufluxDE\Generator;
 
-use Plenty\Modules\DataExchange\Contracts\CSVGenerator;
+use Plenty\Modules\DataExchange\Contracts\CSVPluginGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -16,7 +16,7 @@ use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
 /**
  * Class KaufluxDE
  */
-class KaufluxDE extends CSVGenerator
+class KaufluxDE extends CSVPluginGenerator
 {
     const KAUFLUX_DE = 116.00;
     const STATUS_VISIBLE = 0;
@@ -90,7 +90,7 @@ class KaufluxDE extends CSVGenerator
      * @param array $formatSettings
      * @param array $filter
      */
-    protected function generateContent($resultData, array $formatSettings = [], array $filter = [])
+    protected function generatePluginContent($resultData, array $formatSettings = [], array $filter = [])
     {
         $this->elasticExportHelper = pluginApp(ElasticExportCoreHelper::class);
         if(is_array($resultData['documents']) && count($resultData['documents']) > 0)

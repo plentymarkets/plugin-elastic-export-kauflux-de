@@ -18,7 +18,7 @@ class ElasticExportKaufluxDEServiceProvider extends DataExchangeServiceProvider
             'KaufluxDE-Plugin',
             'ElasticExportKaufluxDE\ResultField\KaufluxDE',
             'ElasticExportKaufluxDE\Generator\KaufluxDE',
-            'ElasticExportKaufluxDE\Filter\KaufluxDE',
+            '',
             true
         );
     }
