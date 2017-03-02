@@ -1,4 +1,4 @@
-plentymarkets plugin Elastic Export kauflux.de
+plentymarkets plugin elastic export kauflux.de
 
 Copyright © 2016 plentymarkets GmbH
 
