@@ -1,17 +1,17 @@
 
-# User Guide für das Elastic Export kauflux.de Plugin
+# User Guide für das ElasticExportKaufluxDE Plugin
 
 <div class="container-toc"></div>
 
-## Bei kauflux.de registrieren
+## Bei kauflux registrieren
 
-Auf dem Marktplatz Kauflux bieten Sie Ihre Artikel zum Verkauf an. Weitere Informationen zu diesem Marktplatz finden Sie auf der Handbuchseite [kauflux einrichten](https://www.plentymarkets.eu/handbuch/multi-channel/kauflux/).
+Auf dem Marktplatz kauflux bieten Sie Ihre Artikel zum Verkauf an. Weitere Informationen zu diesem Marktplatz finden Sie auf der Handbuchseite [kauflux einrichten](https://www.plentymarkets.eu/handbuch/multi-channel/kauflux/).
 
-## Elastic Export KaufluxDE-Plugin in plentymarkets einrichten
+## ElasticExportKaufluxDE Plugin in plentymarkets einrichten
 
 Um dieses Format nutzen zu können, benötigen Sie das Plugin Elastic Export.
 
-Nachdem Sie das Elastic Export kauflux.de Plugin im plentyMarketplace gekauft haben, richten Sie das Exportformat wie auf der Handbuchseite [Daten exportieren](https://www.plentymarkets.eu/handbuch/datenaustausch/daten-exportieren/#4) beschrieben ein.
+Nachdem Sie das ElasticExportKaufluxDE Plugin im plentyMarketplace gekauft haben, richten Sie das Exportformat wie auf der Handbuchseite [Daten exportieren](https://www.plentymarkets.eu/handbuch/datenaustausch/daten-exportieren/#4) beschrieben ein.
 
 ## Lizenz
 
