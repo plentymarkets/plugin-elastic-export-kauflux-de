@@ -165,7 +165,7 @@ class KaufluxDE extends CSVPluginGenerator
                     continue;
                 }
 
-                $basePriceList = $this->elasticExportHelper->getBasePriceList($item, $this->idlVariations[$item['id']]['variationRetailPrice.price']);
+                $basePriceList = $this->elasticExportHelper->getBasePriceList($item,(float) $this->idlVariations[$item['id']]['variationRetailPrice.price']);
 
                 $shippingCost = $this->elasticExportHelper->getShippingCost($item['data']['item']['id'], $settings);
                 if(is_null($shippingCost))
