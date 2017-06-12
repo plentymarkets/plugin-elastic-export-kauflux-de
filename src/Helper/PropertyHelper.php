@@ -4,6 +4,7 @@ namespace ElasticExportKaufluxDE\Helper;
 
 use Plenty\Modules\Item\Property\Contracts\PropertyMarketReferenceRepositoryContract;
 use Plenty\Modules\Item\Property\Contracts\PropertyNameRepositoryContract;
+use Plenty\Modules\Item\Property\Models\PropertyMarketReference;
 use Plenty\Modules\Item\Property\Models\PropertyName;
 use Plenty\Plugin\Log\Loggable;
 
@@ -92,11 +93,15 @@ class PropertyHelper
                     $propertyName = $this->propertyNameRepository->findOne($property['property']['id'], $lang);
                     $propertyMarketReference = $this->propertyMarketReferenceRepository->findOne($property['property']['id'], self::KAUFLUX_DE);
 
-                    // Skip properties which do not have the External Component set up
+                    // For kauflux we have the property as a Checkbox, so the External Component doesn't exist,
+                    // giving that empty type property cannot be accepted and it will be skipped. Also will be skipped
+                    // a property which is not found or which doesn't have a property name and property market reference association
                     if(!($propertyName instanceof PropertyName) ||
+                        !($propertyMarketReference instanceof PropertyMarketReference) ||
                         is_null($propertyName) ||
                         is_null($propertyMarketReference) ||
-                        $propertyMarketReference->externalComponent == '0')
+                        $propertyMarketReference->componentId == 0 ||
+                        $property['property']['valueType'] == self::PROPERTY_TYPE_EMPTY)
                     {
                         $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::item.variationPropertyNotAdded', [
                             'ItemId'            => $variation['data']['item']['id'],
@@ -112,7 +117,7 @@ class PropertyHelper
                     {
                         if(is_array($property['texts']))
                         {
-                            $list[(string)$propertyMarketReference->externalComponent] = $property['texts']['value'];
+                            $list[(string)$propertyMarketReference->propertyId] = $property['texts']['value'];
                         }
                     }
 
@@ -120,13 +125,8 @@ class PropertyHelper
                     {
                         if(is_array($property['selection']))
                         {
-                            $list[(string)$propertyMarketReference->externalComponent] = $property['selection']['name'];
+                            $list[(string)$propertyMarketReference->propertyId] = $property['selection']['name'];
                         }
-                    }
-
-                    if($property['property']['valueType'] == self::PROPERTY_TYPE_EMPTY)
-                    {
-                        $list[(string)$propertyMarketReference->externalComponent] = $propertyMarketReference->externalComponent;
                     }
                 }
             }

@@ -4,6 +4,7 @@ namespace ElasticExportKaufluxDE\Generator;
 
 use ElasticExport\Helper\ElasticExportPriceHelper;
 use ElasticExport\Helper\ElasticExportStockHelper;
+use ElasticExportKaufluxDE\Helper\MarketHelper;
 use ElasticExportKaufluxDE\Helper\PropertyHelper;
 use ElasticExportKaufluxDE\Helper\StockHelper;
 use Plenty\Modules\DataExchange\Contracts\CSVPluginGenerator;
@@ -67,6 +68,11 @@ class KaufluxDE extends CSVPluginGenerator
     private $stockHelper;
 
     /**
+     * @var MarketHelper
+     */
+    private $marketHelper;
+
+    /**
      * @var array
      */
     private $shippingCostCache;
@@ -106,12 +112,14 @@ class KaufluxDE extends CSVPluginGenerator
         ArrayHelper $arrayHelper,
         PropertyHelper $propertyHelper,
         StockHelper $stockHelper,
+        MarketHelper $marketHelper,
         ItemCrossSellingRepositoryContract $itemCrossSellingRepository
     )
     {
         $this->arrayHelper = $arrayHelper;
         $this->propertyHelper = $propertyHelper;
         $this->stockHelper = $stockHelper;
+        $this->marketHelper = $marketHelper;
         $this->itemCrossSellingRepository = $itemCrossSellingRepository;
     }
 
@@ -209,7 +217,7 @@ class KaufluxDE extends CSVPluginGenerator
                             if($previousItemId === null || $previousItemId != $variation['data']['item']['id'])
                             {
                                 $previousItemId = $variation['data']['item']['id'];
-                                unset($this->shippingCostCache, $this->manufacturerCache);
+                                unset($this->shippingCostCache, $this->itemCrossSellingListCache);
 
                                 // Build the caches arrays
                                 $this->buildCaches($variation, $settings);
@@ -331,15 +339,15 @@ class KaufluxDE extends CSVPluginGenerator
                 'BestellNr' 		=> $this->getSku($variation),
                 'EAN' 				=> $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
                 'Hersteller' 		=> $manufacturer,
-                'BestandModus' 		=> $this->stockHelper->getConfigValue('stockCondition'),
+                'BestandModus' 		=> $this->marketHelper->getConfigValue('stockCondition'),
                 'BestandAbsolut' 	=> $this->stockHelper->getStock($variation),
                 'Liefertyp' 		=> 'V',
                 'VersandKlasse' 	=> $shippingCost,
                 'Lieferzeit' 		=> $this->elasticExportHelper->getAvailability($variation, $settings, false),
-                'Umtausch' 			=> $this->stockHelper->getConfigValue('returnDays'),
+                'Umtausch' 			=> $this->marketHelper->getConfigValue('returnDays'),
                 'Bezeichnung' 		=> $this->elasticExportHelper->getMutatedName($variation, $settings), //. ' ' . $variation->variationBase->variationName, todo maybe add the attribute value name
                 'KurzText' 			=> $this->elasticExportHelper->getMutatedPreviewText($variation, $settings),
-                'DetailText' 		=> $this->elasticExportHelper->getMutatedDescription($variation, $settings) . ' ' . $this->propertyHelper->getPropertyListDescription($variation),
+                'DetailText' 		=> $this->elasticExportHelper->getMutatedDescription($variation, $settings) . ' ' . $this->propertyHelper->getPropertyListDescription($variation, $settings->get('lang')),
                 'Keywords' 			=> $variation['data']['texts']['keywords'],
                 'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
                 'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
@@ -348,7 +356,7 @@ class KaufluxDE extends CSVPluginGenerator
                 'Preis' 			=> $priceList['price'],
                 'MwSt' 				=> $priceList['vatValue'],
                 'UVP' 				=> $priceList['recommendedRetailPrice'],
-                'Katalog1' 			=> $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), 0, $settings->get('plentyId')),
+                'Katalog1' 			=> $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
                 'Flags' 			=> $flag,
                 'LinkXS' 			=> $itemCrossSellingList,
                 'ExtLinkDetail' 	=> $this->elasticExportHelper->getMutatedUrl($variation, $settings),
@@ -384,9 +392,9 @@ class KaufluxDE extends CSVPluginGenerator
      */
     private function getStoreSpecialFlag($variation):string
     {
-        if(!is_null($variation['data']['item']['storeSpecial']) && array_key_exists($variation['data']['item']['storeSpecial'], $this->flags))
+        if(!is_null($variation['data']['item']['storeSpecial']) && !is_null($variation['data']['item']['storeSpecial']['id']) && array_key_exists($variation['data']['item']['storeSpecial']['id'], $this->flags))
         {
-            return $this->flags[$variation['data']['item']['storeSpecial']];
+            return $this->flags[$variation['data']['item']['storeSpecial']['id']];
         }
 
         return '';

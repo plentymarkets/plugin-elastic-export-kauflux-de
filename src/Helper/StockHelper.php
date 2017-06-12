@@ -2,7 +2,6 @@
 
 namespace ElasticExportKaufluxDE\Helper;
 
-use ElasticExport\Helper\ElasticExportCoreHelper;
 use Illuminate\Support\Collection;
 use Plenty\Modules\StockManagement\Stock\Contracts\StockRepositoryContract;
 use Plenty\Modules\StockManagement\Stock\Models\Stock;
@@ -31,23 +30,23 @@ class StockHelper
     private $stockRepository;
 
     /**
-     * @var ElasticExportCoreHelper
+     * @var MarketHelper
      */
-    private $elasticExportHelper;
+    private $marketHelper;
 
     /**
      * StockHelper constructor.
      *
      * @param StockRepositoryContract $stockRepositoryContract
-     * @param ElasticExportCoreHelper $elasticExportHelper
+     * @param MarketHelper $marketHelper
      */
     public function __construct(
         StockRepositoryContract $stockRepositoryContract,
-        ElasticExportCoreHelper $elasticExportHelper
+        MarketHelper $marketHelper
     )
     {
         $this->stockRepository = $stockRepositoryContract;
-        $this->elasticExportHelper = $elasticExportHelper;
+        $this->marketHelper = $marketHelper;
     }
 
     /**
@@ -85,7 +84,7 @@ class StockHelper
         $stock = self::STOCK_MAXIMUM_VALUE;
 
         // stock is limited by kauflux config condition
-        if($this->getConfigValue('stockCondition') != 'N')
+        if($this->marketHelper->getConfigValue('stockCondition') != 'N')
         {
             // if stock limitation is available, but stock is not limited
             if($variation['data']['variation']['stockLimitation'] == self::STOCK_AVAILABLE_NOT_LIMITED && $stockNet > 0)
@@ -116,23 +115,6 @@ class StockHelper
         return $stock;
     }
 
-    /**
-     * Get kauflux configuration.
-     *
-     * @param  string $key
-     * @return string
-     */
-    public function getConfigValue(string $key):string
-    {
-        $config = $this->elasticExportHelper->getConfig('market.kauflux');
-
-        if(is_array($config) && array_key_exists($key, $config))
-        {
-            return (string) $config[$key];
-        }
-
-        return '';
-    }
 
     /**
      * Check if stock available.
@@ -145,7 +127,7 @@ class StockHelper
         $stock = $this->getStock($variation);
 
         // if stock is limited by kauflux config condition and stock is negative
-        if($this->getConfigValue('stockCondition') != 'N' && $stock <= 0)
+        if($this->marketHelper->getConfigValue('stockCondition') != 'N' && $stock <= 0)
         {
             return false;
         }
