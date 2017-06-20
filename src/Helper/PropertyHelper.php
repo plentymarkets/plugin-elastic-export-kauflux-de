@@ -21,6 +21,8 @@ class PropertyHelper
     const PROPERTY_TYPE_TEXT = 'text';
     const PROPERTY_TYPE_SELECTION = 'selection';
     const PROPERTY_TYPE_EMPTY = 'empty';
+    const PROPERTY_TYPE_INT = 'int';
+    const PROPERTY_TYPE_FLOAT = 'float';
 
     /**
      * @var array
@@ -112,20 +114,32 @@ class PropertyHelper
 
                         continue;
                     }
-
-                    if($property['property']['valueType'] == self::PROPERTY_TYPE_TEXT)
+                    elseif($property['property']['valueType'] == self::PROPERTY_TYPE_TEXT)
                     {
                         if(is_array($property['texts']))
                         {
                             $list[(string)$propertyMarketReference->propertyId] = $property['texts']['value'];
                         }
                     }
-
-                    if($property['property']['valueType'] == self::PROPERTY_TYPE_SELECTION)
+                    elseif($property['property']['valueType'] == self::PROPERTY_TYPE_SELECTION)
                     {
                         if(is_array($property['selection']))
                         {
                             $list[(string)$propertyMarketReference->propertyId] = $property['selection']['name'];
+                        }
+                    }
+                    elseif($property['property']['valueType'] == self::PROPERTY_TYPE_INT)
+                    {
+                        if(!is_null($property['valueInt']))
+                        {
+                            $list[(string)$propertyMarketReference->propertyId] = $property['valueInt'];
+                        }
+                    }
+                    elseif($property['property']['valueType'] == self::PROPERTY_TYPE_FLOAT)
+                    {
+                        if(!is_null($property['valueFloat']))
+                        {
+                            $list[(string)$propertyMarketReference->propertyId] = $property['valueFloat'];
                         }
                     }
                 }

@@ -336,7 +336,7 @@ class KaufluxDE extends CSVPluginGenerator
 
             $data = [
                 'GroupID' 			=> $variation['data']['item']['id'],
-                'BestellNr' 		=> $this->getSku($variation),
+                'BestellNr' 		=> $this->elasticExportHelper->generateSku($variation['id'], self::KAUFLUX_DE, 0, $variation['data']['skus'][0]['sku']),
                 'EAN' 				=> $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
                 'Hersteller' 		=> $manufacturer,
                 'BestandModus' 		=> $this->marketHelper->getConfigValue('stockCondition'),
@@ -356,7 +356,7 @@ class KaufluxDE extends CSVPluginGenerator
                 'Preis' 			=> $priceList['price'],
                 'MwSt' 				=> $priceList['vatValue'],
                 'UVP' 				=> $priceList['recommendedRetailPrice'],
-                'Katalog1' 			=> $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
+                'Katalog1' 			=> $this->elasticExportHelper->getCategoryMarketplace((int)$variation['data']['defaultCategories'][0]['id'], (int)$settings->get('plentyId'), (int)self::KAUFLUX_DE),
                 'Flags' 			=> $flag,
                 'LinkXS' 			=> $itemCrossSellingList,
                 'ExtLinkDetail' 	=> $this->elasticExportHelper->getMutatedUrl($variation, $settings),
@@ -398,25 +398,6 @@ class KaufluxDE extends CSVPluginGenerator
         }
 
         return '';
-    }
-
-    /**
-     * Get the sku of a variation.
-     *
-     * @param $variation
-     * @return string
-     */
-    private function getSku($variation):string
-    {
-        // Get the sku if it's already indexed
-        $sku = null;
-        if(!is_null($variation['data']['skus'][0]['sku']) && strlen($variation['data']['skus'][0]['sku']) > 0)
-        {
-            $sku = (string)$variation['data']['skus'][0]['sku'];
-        }
-
-        // Update and return the sku
-        return $this->elasticExportHelper->generateSku($variation['id'], self::KAUFLUX_DE, 0, $sku);
     }
 
     /**

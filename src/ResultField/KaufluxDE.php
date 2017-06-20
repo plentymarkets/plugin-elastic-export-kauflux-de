@@ -189,6 +189,8 @@ class KaufluxDE extends ResultFields
                 'properties.selection.lang',
                 'properties.texts.value',
                 'properties.texts.lang',
+                'properties.valueInt',
+                'properties.valueFloat',
             ],
 
             [
@@ -321,6 +323,8 @@ class KaufluxDE extends ResultFields
                 'selection.lang',
                 'texts.value',
                 'texts.lang',
+                'valueInt',
+                'valueFloat',
             ],
         ];
 
