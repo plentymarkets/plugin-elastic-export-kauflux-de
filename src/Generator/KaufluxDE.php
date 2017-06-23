@@ -2,23 +2,32 @@
 
 namespace ElasticExportKaufluxDE\Generator;
 
+use ElasticExport\Helper\ElasticExportPriceHelper;
+use ElasticExport\Helper\ElasticExportStockHelper;
+use ElasticExportKaufluxDE\Helper\MarketHelper;
+use ElasticExportKaufluxDE\Helper\PropertyHelper;
+use ElasticExportKaufluxDE\Helper\StockHelper;
 use Plenty\Modules\DataExchange\Contracts\CSVPluginGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
-use Plenty\Modules\Item\DataLayer\Models\Record;
-use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
 use ElasticExport\Helper\ElasticExportCoreHelper;
 use Plenty\Modules\Helper\Models\KeyValue;
-use Plenty\Modules\Item\Property\Contracts\PropertySelectionRepositoryContract;
-use Plenty\Modules\Item\Property\Models\PropertySelection;
-use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
+use Plenty\Modules\Item\ItemCrossSelling\Contracts\ItemCrossSellingRepositoryContract;
+use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class KaufluxDE
+ * @package ElasticExportKaufluxDE\Generator
  */
 class KaufluxDE extends CSVPluginGenerator
 {
+    use Loggable;
+
     const KAUFLUX_DE = 116.00;
+
+    const DELIMITER = ";";
+
     const STATUS_VISIBLE = 0;
     const STATUS_LOCKED = 1;
     const STATUS_HIDDEN = 2;
@@ -28,35 +37,60 @@ class KaufluxDE extends CSVPluginGenerator
      */
     private $elasticExportHelper;
 
-    /*
+    /**
+     * @var ElasticExportStockHelper
+     */
+    private $elasticExportStockHelper;
+
+    /**
+     * @var ElasticExportPriceHelper
+     */
+    private $elasticExportPriceHelper;
+
+    /**
+     * @var ItemCrossSellingRepositoryContract
+     */
+    private $itemCrossSellingRepository;
+
+    /**
      * @var ArrayHelper
      */
     private $arrayHelper;
 
     /**
-     * PropertySelectionRepositoryContract $propertySelectionRepository
+     * @var PropertyHelper
      */
-    private $propertySelectionRepository;
+    private $propertyHelper;
 
     /**
-     * @var UrlBuilderRepositoryContract $urlBuilderRepository
+     * @var StockHelper
      */
-    private $urlBuilderRepository;
+    private $stockHelper;
+
+    /**
+     * @var MarketHelper
+     */
+    private $marketHelper;
 
     /**
      * @var array
      */
-    private $itemPropertyCache = [];
+    private $shippingCostCache;
+
+    /**
+     * @var array
+     */
+    private $manufacturerCache;
+
+    /**
+     * @var array
+     */
+    private $itemCrossSellingListCache;
 
     /**
      * @var array
      */
     private $addedItems = [];
-
-    /**
-     * @var array $idlVariations
-     */
-    private $idlVariations = array();
 
     /**
      * @var array
@@ -70,240 +104,313 @@ class KaufluxDE extends CSVPluginGenerator
 
     /**
      * KaufluxDE constructor.
+     *
      * @param ArrayHelper $arrayHelper
-     * @param PropertySelectionRepositoryContract $propertySelectionRepository
-     * @param UrlBuilderRepositoryContract $urlBuilderRepository
+     * @param PropertyHelper $propertyHelper
      */
     public function __construct(
         ArrayHelper $arrayHelper,
-        PropertySelectionRepositoryContract $propertySelectionRepository,
-        UrlBuilderRepositoryContract $urlBuilderRepository
+        PropertyHelper $propertyHelper,
+        StockHelper $stockHelper,
+        MarketHelper $marketHelper,
+        ItemCrossSellingRepositoryContract $itemCrossSellingRepository
     )
     {
         $this->arrayHelper = $arrayHelper;
-        $this->propertySelectionRepository = $propertySelectionRepository;
-        $this->urlBuilderRepository = $urlBuilderRepository;
+        $this->propertyHelper = $propertyHelper;
+        $this->stockHelper = $stockHelper;
+        $this->marketHelper = $marketHelper;
+        $this->itemCrossSellingRepository = $itemCrossSellingRepository;
     }
 
     /**
-     * @param array $resultData
+     * Generates and populates the data into the CSV file.
+     *
+     * @param VariationElasticSearchScrollRepositoryContract $elasticSearch
      * @param array $formatSettings
      * @param array $filter
      */
-    protected function generatePluginContent($resultData, array $formatSettings = [], array $filter = [])
+    protected function generatePluginContent($elasticSearch, array $formatSettings = [], array $filter = [])
     {
         $this->elasticExportHelper = pluginApp(ElasticExportCoreHelper::class);
-        if(is_array($resultData['documents']) && count($resultData['documents']) > 0)
+
+        $this->elasticExportStockHelper = pluginApp(ElasticExportStockHelper::class);
+
+        $this->elasticExportPriceHelper = pluginApp(ElasticExportPriceHelper::class);
+
+        $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
+
+        $this->setDelimiter(self::DELIMITER);
+
+        $this->addCSVContent($this->head());
+
+        $startTime = microtime(true);
+
+        if($elasticSearch instanceof VariationElasticSearchScrollRepositoryContract)
         {
-            $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
+            // Initiate the counter for the variations limit
+            $limitReached = false;
+            $limit = 0;
 
-            $this->setDelimiter(";");
+            do
+            {
+                $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.writtenLines', [
+                    'Lines written' => $limit,
+                ]);
 
-            $this->addCSVContent([
-                'GroupID',
-                'BestellNr',
-                'EAN',
-                'Hersteller',
-                'BestandModus',
-                'BestandAbsolut',
-                'Liefertyp',
-                'VersandKlasse',
-                'Lieferzeit',
-                'Umtausch',
-                'Bezeichnung',
-                'KurzText',
-                'DetailText',
-                'Keywords',
-                'Bild1',
-                'Bild2',
-                'Bild3',
-                'Gewicht',
-                'Preis',
-                'MwSt',
-                'UVP',
-                'Katalog1',
-                'Flags',
-                'LinkXS',
-                'ExtLinkDetail',
-                'Status',
-                'FreeVar1',
-                'FreeVar2',
-                'FreeVar3',
-                'InhaltMenge',
-                'InhaltEinheit',
-                'InhaltVergleich',
-                'HerstellerArtNr',
+                // Stop writing if limit is reached
+                if($limitReached === true)
+                {
+                    break;
+                }
+
+                $esStartTime = microtime(true);
+
+                // Get the data from Elastic Search
+                $resultList = $elasticSearch->execute();
+
+                $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.esDuration', [
+                    'Elastic Search duration' => microtime(true) - $esStartTime,
+                ]);
+
+                if(count($resultList['error']) > 0)
+                {
+                    $this->getLogger(__METHOD__)->error('ElasticExportKaufluxDE::log.occurredElasticSearchErrors', [
+                        'Error message' => $resultList['error'],
+                    ]);
+                }
+
+                $buildRowsStartTime = microtime(true);
+
+                if(is_array($resultList['documents']) && count($resultList['documents']) > 0)
+                {
+                    $previousItemId = null;
+
+                    foreach ($resultList['documents'] as $variation)
+                    {
+                        // Stop and set the flag if limit is reached
+                        if($limit == $filter['limit'])
+                        {
+                            $limitReached = true;
+                            break;
+                        }
+
+                        // If filtered by stock is set and stock is negative, then skip the variation
+                        if($this->elasticExportStockHelper->isFilteredByStock($variation, $filter) === true)
+                        {
+                            $this->getLogger(__METHOD__)->info('ElasticExportKaufluxDE::log.variationNotPartOfExportStock', [
+                                'VariationId' => (string)$variation['id']
+                            ]);
+
+                            continue;
+                        }
+
+                        // If is not valid, then skip the variation
+                        if(!$this->stockHelper->isValid($variation))
+                        {
+                            continue;
+                        }
+
+                        try
+                        {
+                            // Set the caches if we have the first variation or when we have the first variation of an item
+                            if($previousItemId === null || $previousItemId != $variation['data']['item']['id'])
+                            {
+                                $previousItemId = $variation['data']['item']['id'];
+                                unset($this->shippingCostCache, $this->itemCrossSellingListCache);
+
+                                // Build the caches arrays
+                                $this->buildCaches($variation, $settings);
+                            }
+
+                            // Build the new row for printing in the CSV file
+                            $this->buildRow($variation, $settings);
+                        }
+                        catch(\Throwable $throwable)
+                        {
+                            $this->getLogger(__METHOD__)->error('ElasticExportKaufluxDE::logs.fillRowError', [
+                                'Error message ' => $throwable->getMessage(),
+                                'Error line'     => $throwable->getLine(),
+                                'VariationId'    => (string)$variation['id']
+                            ]);
+                        }
+
+                        // New line was added
+                        $limit++;
+                    }
+
+                    $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.buildRowsDuration', [
+                        'Build rows duration' => microtime(true) - $buildRowsStartTime,
+                    ]);
+                }
+
+            } while ($elasticSearch->hasNext());
+        }
+
+        $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.fileGenerationDuration', [
+            'Whole file generation duration' => microtime(true) - $startTime,
+        ]);
+    }
+
+    /**
+     * Creates the header of the CSV file.
+     *
+     * @return array
+     */
+    private function head():array
+    {
+        return array(
+            'GroupID',
+            'BestellNr',
+            'EAN',
+            'Hersteller',
+            'BestandModus',
+            'BestandAbsolut',
+            'Liefertyp',
+            'VersandKlasse',
+            'Lieferzeit',
+            'Umtausch',
+            'Bezeichnung',
+            'KurzText',
+            'DetailText',
+            'Keywords',
+            'Bild1',
+            'Bild2',
+            'Bild3',
+            'Gewicht',
+            'Preis',
+            'MwSt',
+            'UVP',
+            'Katalog1',
+            'Flags',
+            'LinkXS',
+            'ExtLinkDetail',
+            'Status',
+            'FreeVar1',
+            'FreeVar2',
+            'FreeVar3',
+            'InhaltMenge',
+            'InhaltEinheit',
+            'InhaltVergleich',
+            'HerstellerArtNr',
+        );
+    }
+
+    /**
+     * Creates the variation row and prints it into the CSV file.
+     *
+     * @param array $variation
+     * @param KeyValue $settings
+     */
+    private function buildRow($variation, KeyValue $settings)
+    {
+        $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.variationConstructRow', [
+            'Data row duration' => 'Row printing start'
+        ]);
+
+        $rowTime = microtime(true);
+
+        // Get the price list
+        $priceList = $this->elasticExportPriceHelper->getPriceList($variation, $settings);
+
+        // Only variations with the Retail Price greater than zero will be handled
+        if(!is_null($priceList['price']) && $priceList['price'] > 0)
+        {
+            // Get shipping cost
+            $shippingCost = $this->getShippingCost($variation);
+
+            // Get the manufacturer
+            $manufacturer = $this->getManufacturer($variation);
+
+            // Get the cross sold items
+            $itemCrossSellingList = $this->getItemCrossSellingList($variation);
+
+            // Get base price information list
+            $basePriceList = $this->elasticExportHelper->getBasePriceList($variation, (float)$priceList['price'], $settings->get('lang'));
+
+            // Get image list in the specified order
+            $imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, 'variationImages');
+
+            // Get the flag for the store special
+            $flag = $this->getStoreSpecialFlag($variation);
+
+            $data = [
+                'GroupID' 			=> $variation['data']['item']['id'],
+                'BestellNr' 		=> $this->elasticExportHelper->generateSku($variation['id'], self::KAUFLUX_DE, 0, $variation['data']['skus'][0]['sku']),
+                'EAN' 				=> $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
+                'Hersteller' 		=> $manufacturer,
+                'BestandModus' 		=> $this->marketHelper->getConfigValue('stockCondition'),
+                'BestandAbsolut' 	=> $this->stockHelper->getStock($variation),
+                'Liefertyp' 		=> 'V',
+                'VersandKlasse' 	=> $shippingCost,
+                'Lieferzeit' 		=> $this->elasticExportHelper->getAvailability($variation, $settings, false),
+                'Umtausch' 			=> $this->marketHelper->getConfigValue('returnDays'),
+                'Bezeichnung' 		=> $this->elasticExportHelper->getMutatedName($variation, $settings), //. ' ' . $variation->variationBase->variationName, todo maybe add the attribute value name
+                'KurzText' 			=> $this->elasticExportHelper->getMutatedPreviewText($variation, $settings),
+                'DetailText' 		=> $this->elasticExportHelper->getMutatedDescription($variation, $settings) . ' ' . $this->propertyHelper->getPropertyListDescription($variation, $settings->get('lang')),
+                'Keywords' 			=> $variation['data']['texts']['keywords'],
+                'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
+                'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
+                'Bild3' 			=> count($imageList) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
+                'Gewicht' 			=> $variation['data']['variation']['weightG'],
+                'Preis' 			=> $priceList['price'],
+                'MwSt' 				=> $priceList['vatValue'],
+                'UVP' 				=> $priceList['recommendedRetailPrice'],
+                'Katalog1' 			=> $this->elasticExportHelper->getCategoryMarketplace((int)$variation['data']['defaultCategories'][0]['id'], (int)$settings->get('plentyId'), (int)self::KAUFLUX_DE),
+                'Flags' 			=> $flag,
+                'LinkXS' 			=> $itemCrossSellingList,
+                'ExtLinkDetail' 	=> $this->elasticExportHelper->getMutatedUrl($variation, $settings),
+                'Status' 			=> $this->getStatus($variation),
+                'FreeVar1' 			=> $variation['data']['item']['free1'],
+                'FreeVar2' 			=> $variation['data']['item']['free2'],
+                'FreeVar3' 			=> $variation['data']['item']['free3'],
+                'InhaltMenge' 		=> $basePriceList['lot'],
+                'InhaltEinheit' 	=> $basePriceList['unit'], //TODO use Kauflux measurements
+                'InhaltVergleich' 	=> '',
+                'HerstellerArtNr' 	=> $variation['data']['variation']['model'],
+            ];
+
+            $this->addCSVContent(array_values($data));
+
+            $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.variationConstructRowFinished', [
+                'Data row duration' => 'Row printing took: ' . (microtime(true) - $rowTime),
             ]);
-
-            //Create a List of all VariationIds
-            $variationIdList = array();
-            foreach($resultData['documents'] as $variation)
-            {
-                $variationIdList[] = $variation['id'];
-            }
-
-            //Get the missing fields in ES from IDL
-            if(is_array($variationIdList) && count($variationIdList) > 0)
-            {
-                /**
-                 * @var \ElasticExportKaufluxDE\IDL_ResultList\KaufluxDE $idlResultList
-                 */
-                $idlResultList = pluginApp(\ElasticExportKaufluxDE\IDL_ResultList\KaufluxDE::class);
-                $idlResultList = $idlResultList->getResultList($variationIdList, $settings);
-            }
-
-            //Creates an array with the variationId as key to surpass the sorting problem
-            if(isset($idlResultList) && $idlResultList instanceof RecordList)
-            {
-                $this->createIdlArray($idlResultList);
-            }
-
-            foreach($resultData['documents'] as $item)
-            {
-                if(!$this->valid($item))
-                {
-                    continue;
-                }
-
-                $basePriceList = $this->elasticExportHelper->getBasePriceList($item,(float) $this->idlVariations[$item['id']]['variationRetailPrice.price']);
-
-                $shippingCost = $this->elasticExportHelper->getShippingCost($item['data']['item']['id'], $settings);
-                if(is_null($shippingCost))
-                {
-                    $shippingCost = '';
-                }
-
-                $imageList = $this->elasticExportHelper->getImageListInOrder($item, $settings, 3, 'variationImages');
-
-                $data = [
-                    'GroupID' 			=> $item['data']['item']['id'],
-                    'BestellNr' 		=> $this->elasticExportHelper->generateSku($item['id'], self::KAUFLUX_DE, 0, (string)$item['data']['skus']['sku']),
-                    'EAN' 				=> $this->elasticExportHelper->getBarcodeByType($item, $settings->get('barcode')),
-                    'Hersteller' 		=> $this->elasticExportHelper->getExternalManufacturerName((int)$item['data']['item']['manufacturer']['id']),
-                    'BestandModus' 		=> $this->config('stockCondition'),
-                    'BestandAbsolut' 	=> $this->getStock($item),
-                    'Liefertyp' 		=> 'V',
-                    'VersandKlasse' 	=> $shippingCost,
-                    'Lieferzeit' 		=> $this->elasticExportHelper->getAvailability($item, $settings, false),
-                    'Umtausch' 			=> $this->config('returnDays'),
-                    'Bezeichnung' 		=> $this->elasticExportHelper->getName($item, $settings), //. ' ' . $item->variationBase->variationName, todo maybe add the attribute value name
-                    'KurzText' 			=> $this->elasticExportHelper->getPreviewText($item, $settings),
-                    'DetailText' 		=> $this->elasticExportHelper->getDescription($item, $settings) . ' ' . $this->getPropertyDescription($item),
-                    'Keywords' 			=> $item['data']['texts'][0]['keywords'],
-                    'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
-                    'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
-                    'Bild3' 			=> count($imageList) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
-                    'Gewicht' 			=> $item['data']['variation']['weightG'],
-                    'Preis' 			=> number_format((float)$this->idlVariations[$item['id']]['variationRetailPrice.price'], 2, '.', ''),
-                    'MwSt' 				=> $this->idlVariations[$item['id']]['variationRetailPrice.vatValue'],
-                    'UVP' 				=> $this->elasticExportHelper->getRecommendedRetailPrice($item, $settings),
-                    'Katalog1' 			=> $this->elasticExportHelper->getCategory((int)$item['data']['defaultCategories'][0]['id'], $settings->get('lang'), 0, $settings->get('plentyId')),
-                    'Flags' 			=> in_array($item['data']['item']['storeSpecial'], $this->flags) ? $this->flags[$item['data']['item']['storeSpecial']] : '',
-                    'LinkXS' 			=> implode(', ', $this->getCrossSellingItems($item)),
-                    'ExtLinkDetail' 	=> $this->elasticExportHelper->getUrl($item, $settings),
-                    'Status' 			=> $this->getStatus($item),
-                    'FreeVar1' 			=> $item['data']['item']['free1'],
-                    'FreeVar2' 			=> $item['data']['item']['free2'],
-                    'FreeVar3' 			=> $item['data']['item']['free3'],
-                    'InhaltMenge' 		=> $basePriceList['lot'],
-                    'InhaltEinheit' 	=> $basePriceList['unit'], //TODO use Kauflux measurements
-                    'InhaltVergleich' 	=> '',
-                    'HerstellerArtNr' 	=> $item['data']['variation']['model'],
-                ];
-
-                $this->addCSVContent(array_values($data));
-            }
+        }
+        else
+        {
+            $this->getLogger(__METHOD__)->info('ElasticExportKaufluxDE::log.variationNotPartOfExportPrice', [
+                'VariationId' => (string)$variation['id']
+            ]);
         }
     }
 
     /**
-     * Get description of all correlated properties
-     * @param array $item
+     * Get the item value for the store special flag.
+     *
+     * @param $variation
      * @return string
      */
-    private function getPropertyDescription($item):string
+    private function getStoreSpecialFlag($variation):string
     {
-        $properties = $this->getItemPropertyList($item);
-
-        $propertyDescription = '';
-
-        foreach($properties as $property)
+        if(!is_null($variation['data']['item']['storeSpecial']) && !is_null($variation['data']['item']['storeSpecial']['id']) && array_key_exists($variation['data']['item']['storeSpecial']['id'], $this->flags))
         {
-            $propertyDescription .= '<br/>' . $property;
+            return $this->flags[$variation['data']['item']['storeSpecial']['id']];
         }
 
-        return $propertyDescription;
-    }
-
-    /**
-     * Get item properties.
-     * @param 	array $item
-     * @return array<string,string>
-     */
-    private function getItemPropertyList($item):array
-    {
-        if(!array_key_exists($item['data']['item']['id'], $this->itemPropertyCache))
-        {
-            $characterMarketComponentList = $this->elasticExportHelper->getItemCharactersByComponent($this->idlVariations[$item['id']], self::KAUFLUX_DE, 1);
-
-            $list = [];
-
-            if(count($characterMarketComponentList))
-            {
-                foreach($characterMarketComponentList as $data)
-                {
-                    if((string) $data['characterValueType'] != 'file' && (string) $data['characterValueType'] != 'empty')
-                    {
-                        if((string) $data['characterValueType'] == 'selection')
-                        {
-                            $characterSelection = $this->propertySelectionRepository->findOne((int) $data['characterValue'], 'de');
-                            if($characterSelection instanceof PropertySelection)
-                            {
-                                $list[] = (string) $characterSelection->name;
-                            }
-                        }
-                        else
-                        {
-                            $list[] = (string) $data['characterValue'];
-                        }
-
-                    }
-                }
-            }
-
-            $this->itemPropertyCache[$item['data']['item']['id']] = $list;
-        }
-
-        return $this->itemPropertyCache[$item['data']['item']['id']];
-    }
-
-    /**
-     * Get list of cross selling items.
-     * @param array $item
-     * @return array<string>
-     */
-    private function getCrossSellingItems($item):array
-    {
-        $list = [];
-
-        foreach($this->idlVariations[$item['id']]['itemCrossSellingList'] as $itemCrossSelling)
-        {
-            $list[] = (string) $itemCrossSelling->crossItemId;
-        }
-
-        return $list;
+        return '';
     }
 
     /**
      * Get status.
-     * @param  array $item
+     *
+     * @param  array $variation
      * @return int
      */
-    private function getStatus($item):int
+    private function getStatus($variation):int
     {
-        if(!array_key_exists($item['data']['item']['id'], $this->addedItems))
+        if(!array_key_exists($variation['data']['item']['id'], $this->addedItems))
         {
-            $this->addedItems[$item['data']['item']['id']] = $item['data']['item']['id'];
+            $this->addedItems[$variation['data']['item']['id']] = $variation['data']['item']['id'];
 
             return self::STATUS_VISIBLE;
         }
@@ -312,85 +419,103 @@ class KaufluxDE extends CSVPluginGenerator
     }
 
     /**
-     * Get stock.
-     * @param array $item
-     * @return int
+     * Create the ids list of cross sold items.
+     *
+     * @param array $variation
+     * @return string
      */
-    private function getStock($item):int
+    private function createItemCrossSellingList($variation):string
     {
-        $stock = $this->idlVariations['variationStock.stockNet'];
+        $list = [];
 
-        if ($item['data']['variation']['stockLimitation'] == 0 || $this->config('stockCondition') == 'N')
+        $itemCrossSellingList = $this->itemCrossSellingRepository->findByItemId($variation['data']['item']['id']);
+
+        foreach($itemCrossSellingList as $itemCrossSelling)
         {
-            $stock = 100;
+            $list[] = (string) $itemCrossSelling->crossItemId;
         }
 
-        return (int) $stock;
+        return implode(', ', $list);
     }
 
     /**
-     * Get kauflux configuration.
-     * @param  string $key
+     * Get the ids list of cross sold items.
+     *
+     * @param $variation
      * @return string
      */
-    private function config(string $key):string
+    private function getItemCrossSellingList($variation):string
     {
-        $config = $this->elasticExportHelper->getConfig('plenty.market.kauflux');
-
-        if(is_array($config) && array_key_exists($key, $config))
+        if(isset($this->itemCrossSellingListCache) && array_key_exists($variation['data']['item']['id'], $this->itemCrossSellingListCache))
         {
-            return (string) $config[$key];
+            return $this->itemCrossSellingListCache[$variation['data']['item']['id']];
         }
 
         return '';
     }
 
     /**
-     * Check if stock available.
-     * @param  array $item
-     * @return bool
+     * Get the shipping cost.
+     *
+     * @param $variation
+     * @return string
      */
-    private function valid($item):bool
+    private function getShippingCost($variation):string
     {
-        $stock = $this->idlVariations[$item['id']]['variationStock.stockNet'];
-
-        if ($item['data']['variation']['stockLimitation'] == 0 || $this->config('stockCondition') == 'N')
+        $shippingCost = null;
+        if(isset($this->shippingCostCache) && array_key_exists($variation['data']['item']['id'], $this->shippingCostCache))
         {
-            $stock = 100;
+            $shippingCost = $this->shippingCostCache[$variation['data']['item']['id']];
         }
 
-        if($this->config('stockCondition') != 'N' && $stock <= 0)
+        if(!is_null($shippingCost) && $shippingCost != '0.00')
         {
-            return false;
+            return $shippingCost;
         }
 
-        return true;
+        return '';
     }
 
     /**
-     * @param RecordList $idlResultList
+     * Get the manufacturer name.
+     *
+     * @param $variation
+     * @return string
      */
-    private function createIdlArray($idlResultList)
+    private function getManufacturer($variation):string
     {
-        if($idlResultList instanceof RecordList)
+        if(isset($this->manufacturerCache) && array_key_exists($variation['data']['item']['manufacturer']['id'], $this->manufacturerCache))
         {
-            foreach($idlResultList as $idlVariation)
+            return $this->manufacturerCache[$variation['data']['item']['manufacturer']['id']];
+        }
+
+        return '';
+    }
+
+    /**
+     * Build the cache arrays for the item variation.
+     *
+     * @param $variation
+     * @param $settings
+     */
+    private function buildCaches($variation, $settings)
+    {
+        if(!is_null($variation) && !is_null($variation['data']['item']['id']))
+        {
+            $shippingCost = $this->elasticExportHelper->getShippingCost($variation['data']['item']['id'], $settings, 0);
+            $this->shippingCostCache[$variation['data']['item']['id']] = number_format((float)$shippingCost, 2, '.', '');
+
+            $itemCrossSellingList = $this->createItemCrossSellingList($variation);
+            $this->itemCrossSellingListCache[$variation['data']['item']['id']] = $itemCrossSellingList;
+
+            if(!is_null($variation['data']['item']['manufacturer']['id']))
             {
-                if($idlVariation instanceof Record)
+                if(!isset($this->manufacturerCache) || (isset($this->manufacturerCache) && !array_key_exists($variation['data']['item']['manufacturer']['id'], $this->manufacturerCache)))
                 {
-                    $this->idlVariations[$idlVariation->variationBase->id] = [
-                        'itemBase.id' => $idlVariation->itemBase->id,
-                        'variationBase.id' => $idlVariation->variationBase->id,
-                        'itemCrossSellingList' => $idlVariation->itemCrossSellingList,
-                        'itemPropertyList' => $idlVariation->itemPropertyList,
-                        'variationStock.stockNet' => $idlVariation->variationStock->stockNet,
-                        'variationRetailPrice.price' => $idlVariation->variationRetailPrice->price,
-                        'variationRetailPrice.vatValue' => $idlVariation->variationRetailPrice->vatValue,
-                        'variationRecommendedRetailPrice.price' => $idlVariation->variationRecommendedRetailPrice->price,
-                    ];
+                    $manufacturer = $this->elasticExportHelper->getExternalManufacturerName((int)$variation['data']['item']['manufacturer']['id']);
+                    $this->manufacturerCache[$variation['data']['item']['manufacturer']['id']] = $manufacturer;
                 }
             }
         }
     }
-
 }
