@@ -1,6 +1,6 @@
 # Release Notes for Elastic Export kauflux.de
 
-## v1.0.3 (2017-06-20)
+## v1.0.3 (2017-06-23)
 
 ### Changed
 - The plugin Elastic Export is now required to use the plugin format KaufluxDE.
