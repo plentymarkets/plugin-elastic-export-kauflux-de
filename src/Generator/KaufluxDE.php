@@ -326,7 +326,7 @@ class KaufluxDE extends CSVPluginGenerator
             $itemCrossSellingList = $this->getItemCrossSellingList($variation);
 
             // Get base price information list
-            $basePriceList = $this->elasticExportHelper->getBasePriceList($variation, (float)$priceList['price'], $settings->get('lang'));
+            $basePriceList = $this->elasticExportHelper->getBasePriceDetails($variation, (float)$priceList['price'], $settings->get('lang'));
 
             // Get image list in the specified order
             $imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, 'variationImages');
@@ -364,9 +364,9 @@ class KaufluxDE extends CSVPluginGenerator
                 'FreeVar1' 			=> $variation['data']['item']['free1'],
                 'FreeVar2' 			=> $variation['data']['item']['free2'],
                 'FreeVar3' 			=> $variation['data']['item']['free3'],
-                'InhaltMenge' 		=> $basePriceList['lot'],
-                'InhaltEinheit' 	=> $basePriceList['unit'], //TODO use Kauflux measurements
-                'InhaltVergleich' 	=> '',
+                'InhaltMenge' 		=> $variation['data']['unit']['content'],
+                'InhaltEinheit' 	=> $basePriceList['unitShortName'],
+                'InhaltVergleich' 	=> $basePriceList['recalculatedContent'],
                 'HerstellerArtNr' 	=> $variation['data']['variation']['model'],
             ];
 
