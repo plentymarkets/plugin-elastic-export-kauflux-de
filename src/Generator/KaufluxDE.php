@@ -326,7 +326,7 @@ class KaufluxDE extends CSVPluginGenerator
             $itemCrossSellingList = $this->getItemCrossSellingList($variation);
 
             // Get base price information list
-            $basePriceList = $this->elasticExportHelper->getBasePriceDetails($variation, (float)$priceList['price'], $settings->get('lang'));
+            $basePriceList = $this->elasticExportPriceHelper->getBasePriceDetails($variation, (float)$priceList['price'], $settings->get('lang'));
 
             // Get image list in the specified order
             $imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, 'variationImages');
