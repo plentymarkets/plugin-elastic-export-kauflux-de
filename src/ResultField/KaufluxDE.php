@@ -149,6 +149,7 @@ class KaufluxDE extends ResultFields
                 'id',
                 'variation.availability.id',
                 'variation.stockLimitation',
+
                 'variation.vatId',
                 'variation.model',
                 'variation.weightG',

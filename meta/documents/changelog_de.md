@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export kauflux.de
 
+## v1.0.4 (2017-07-19)
+
+### Behoben
+- Die Werte für die Felder "InhaltMenge", "InhaltVergleich" und "InhaltEinheit" werden nun korrekt exportiert.
+
 ## v1.0.3 (2017-06-23)
 
 ### Geändert
