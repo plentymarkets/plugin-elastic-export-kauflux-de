@@ -364,9 +364,9 @@ class KaufluxDE extends CSVPluginGenerator
                 'FreeVar1' 			=> $variation['data']['item']['free1'],
                 'FreeVar2' 			=> $variation['data']['item']['free2'],
                 'FreeVar3' 			=> $variation['data']['item']['free3'],
-                'InhaltMenge' 		=> $variation['data']['unit']['content'],
-                'InhaltEinheit' 	=> $basePriceList['unitShortName'],
-                'InhaltVergleich' 	=> $basePriceList['recalculatedContent'],
+                'InhaltMenge' 		=> count($basePriceList) ? $variation['data']['unit']['content'] : '',
+                'InhaltEinheit' 	=> count($basePriceList) ? $basePriceList['unitShortName'] : '',
+                'InhaltVergleich' 	=> count($basePriceList) ? $basePriceList['recalculatedContent'] : '',
                 'HerstellerArtNr' 	=> $variation['data']['variation']['model'],
             ];
 
