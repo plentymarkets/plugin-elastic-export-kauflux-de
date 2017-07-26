@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export kauflux.de
 
+## v1.0.5 (2017-07-26)
+
+### Fixed
+- Adjustment to the new return value of the method **getBasePriceDetails** from the Elastic Export version 1.2.2.
+
 ## v1.0.4 (2017-07-19)
 
 ### Fixed
