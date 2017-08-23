@@ -161,7 +161,7 @@ In der folgenden Tabelle finden Sie Hinweise zu den Einstellungen, Formateinstel
 			BestandAbsolut
 		</td>
 		<td>
-			<b>Inhalt:</b> Der <b>Nettowarenbestand der Variante</b>. Bei Artikeln, die nicht auf den Nettowarenbestand beschränkt sind, wird <b>999</b> übertragen.
+			<b>Inhalt:</b> Der <b>Netto-Warenbestand der Variante</b>. Bei Artikeln, die nicht auf den Netto-Warenbestand beschränkt sind, wird <b>999</b> übertragen.
 		</td>        
 	</tr>
 	<tr>
@@ -169,7 +169,7 @@ In der folgenden Tabelle finden Sie Hinweise zu den Einstellungen, Formateinstel
 			Liefertyp
 		</td>
 		<td>
-			<b>Inhalt:</b> Art der Lieferung dieses Artikels:	V = Versand
+			<b>Inhalt:</b> Art der Lieferung dieses Artikels: V = Versand
 		</td>
 	</tr>
 	<tr>
@@ -185,7 +185,7 @@ In der folgenden Tabelle finden Sie Hinweise zu den Einstellungen, Formateinstel
 			Lieferzeit
 		</td>
 		<td>
-			<b>Content:</b>The <b>name of the item availability</b> under <b>Settings » Item » Item availability</b> or the translation according to the format setting <b>Item availability</b>.
+			<b>Content:</b>Der <b>Name der Artikelverfügbarkeit</b> unter <b>Einstellungen » Artikel » Artikelverfügbarkeit</b> oder die Übersetzung gemäß der Formateinstellung <b>Artikelverfügbarkeit</b>.
 		</td>        
 	</tr>
 	<tr>
@@ -193,7 +193,7 @@ In der folgenden Tabelle finden Sie Hinweise zu den Einstellungen, Formateinstel
 			Umtausch
 		</td>
 		<td>
-			<b>Inhalt:</b> Die <b>Umtauschfrist nach Lieferung in Tagen</b>, welche eingestellt wird unter Einstellungen » Märkte » Kauflux » Grundeinstellungen.
+			<b>Inhalt:</b> Die <b>Umtauschfrist nach Lieferung in Tagen</b>, welche unter Einstellungen » Märkte » Kauflux » Grundeinstellungen eingestellt wird.
 		</td>        
 	</tr>
 	<tr>
@@ -345,7 +345,7 @@ In der folgenden Tabelle finden Sie Hinweise zu den Einstellungen, Formateinstel
 			InhaltMenge
 		</td>
 		<td>
-			<b>Inhalt:</b> Die <b>Menge</b> der Variante an (Beispiel: 250).
+			<b>Inhalt:</b> Die <b>Menge</b> der Variante (Beispiel: 250).
 		</td>        
 	</tr>
 	<tr>
