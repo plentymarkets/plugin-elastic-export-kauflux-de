@@ -1,5 +1,11 @@
 # Release Notes für Elastic Export kauflux.de
 
+## v1.0.6 (2017-08-23) 
+
+### Geändert
+- Das Format-Plugin basiert nun nur noch auf Elastic Search.
+- Die Performance wurde verbessert.
+
 ## v1.0.5 (2017-07-26)
 
 ### Behoben

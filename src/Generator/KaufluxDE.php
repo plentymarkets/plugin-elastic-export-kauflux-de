@@ -2,6 +2,7 @@
 
 namespace ElasticExportKaufluxDE\Generator;
 
+use ElasticExport\Helper\ElasticExportItemHelper;
 use ElasticExport\Helper\ElasticExportPriceHelper;
 use ElasticExport\Helper\ElasticExportStockHelper;
 use ElasticExportKaufluxDE\Helper\MarketHelper;
@@ -38,14 +39,19 @@ class KaufluxDE extends CSVPluginGenerator
     private $elasticExportHelper;
 
     /**
-     * @var ElasticExportStockHelper
+     * @var ElasticExportStockHelper $elasticExportStockHelper
      */
     private $elasticExportStockHelper;
 
     /**
-     * @var ElasticExportPriceHelper
+     * @var ElasticExportPriceHelper $elasticExportPriceHelper
      */
     private $elasticExportPriceHelper;
+
+	/**
+	 * @var ElasticExportItemHelper $elasticExportItemHelper
+	 */
+    private $elasticExportItemHelper;
 
     /**
      * @var ItemCrossSellingRepositoryContract
@@ -138,13 +144,13 @@ class KaufluxDE extends CSVPluginGenerator
 
         $this->elasticExportPriceHelper = pluginApp(ElasticExportPriceHelper::class);
 
+		$this->elasticExportItemHelper = pluginApp(ElasticExportItemHelper::class, [1 => true]);
+
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 
         $this->setDelimiter(self::DELIMITER);
 
         $this->addCSVContent($this->head());
-
-        $startTime = microtime(true);
 
         if($elasticSearch instanceof VariationElasticSearchScrollRepositoryContract)
         {
@@ -154,24 +160,15 @@ class KaufluxDE extends CSVPluginGenerator
 
             do
             {
-                $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.writtenLines', [
-                    'Lines written' => $limit,
-                ]);
-
                 // Stop writing if limit is reached
                 if($limitReached === true)
                 {
                     break;
                 }
 
-                $esStartTime = microtime(true);
-
                 // Get the data from Elastic Search
                 $resultList = $elasticSearch->execute();
 
-                $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.esDuration', [
-                    'Elastic Search duration' => microtime(true) - $esStartTime,
-                ]);
 
                 if(count($resultList['error']) > 0)
                 {
@@ -179,8 +176,6 @@ class KaufluxDE extends CSVPluginGenerator
                         'Error message' => $resultList['error'],
                     ]);
                 }
-
-                $buildRowsStartTime = microtime(true);
 
                 if(is_array($resultList['documents']) && count($resultList['documents']) > 0)
                 {
@@ -198,10 +193,6 @@ class KaufluxDE extends CSVPluginGenerator
                         // If filtered by stock is set and stock is negative, then skip the variation
                         if($this->elasticExportStockHelper->isFilteredByStock($variation, $filter) === true)
                         {
-                            $this->getLogger(__METHOD__)->info('ElasticExportKaufluxDE::log.variationNotPartOfExportStock', [
-                                'VariationId' => (string)$variation['id']
-                            ]);
-
                             continue;
                         }
 
@@ -238,18 +229,10 @@ class KaufluxDE extends CSVPluginGenerator
                         // New line was added
                         $limit++;
                     }
-
-                    $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.buildRowsDuration', [
-                        'Build rows duration' => microtime(true) - $buildRowsStartTime,
-                    ]);
                 }
 
             } while ($elasticSearch->hasNext());
         }
-
-        $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.fileGenerationDuration', [
-            'Whole file generation duration' => microtime(true) - $startTime,
-        ]);
     }
 
     /**
@@ -304,84 +287,64 @@ class KaufluxDE extends CSVPluginGenerator
      */
     private function buildRow($variation, KeyValue $settings)
     {
-        $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.variationConstructRow', [
-            'Data row duration' => 'Row printing start'
-        ]);
-
-        $rowTime = microtime(true);
-
         // Get the price list
         $priceList = $this->elasticExportPriceHelper->getPriceList($variation, $settings);
 
-        // Only variations with the Retail Price greater than zero will be handled
-        if(!is_null($priceList['price']) && $priceList['price'] > 0)
-        {
-            // Get shipping cost
-            $shippingCost = $this->getShippingCost($variation);
+		// Get shipping cost
+		$shippingCost = $this->getShippingCost($variation);
 
-            // Get the manufacturer
-            $manufacturer = $this->getManufacturer($variation);
+		// Get the manufacturer
+		$manufacturer = $this->getManufacturer($variation);
 
-            // Get the cross sold items
-            $itemCrossSellingList = $this->getItemCrossSellingList($variation);
+		// Get the cross sold items
+		$itemCrossSellingList = $this->getItemCrossSellingList($variation);
 
-            // Get base price information list
-            $basePriceList = $this->elasticExportPriceHelper->getBasePriceDetails($variation, (float)$priceList['price'], $settings->get('lang'));
+		// Get base price information list
+		$basePriceList = $this->elasticExportPriceHelper->getBasePriceDetails($variation, (float)$priceList['price'], $settings->get('lang'));
 
-            // Get image list in the specified order
-            $imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, 'variationImages');
+		// Get image list in the specified order
+		$imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, $this->elasticExportHelper::VARIATION_IMAGES);
 
-            // Get the flag for the store special
-            $flag = $this->getStoreSpecialFlag($variation);
+		// Get the flag for the store special
+		$flag = $this->getStoreSpecialFlag($variation);
 
-            $data = [
-                'GroupID' 			=> $variation['data']['item']['id'],
-                'BestellNr' 		=> $this->elasticExportHelper->generateSku($variation['id'], self::KAUFLUX_DE, 0, $variation['data']['skus'][0]['sku']),
-                'EAN' 				=> $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
-                'Hersteller' 		=> $manufacturer,
-                'BestandModus' 		=> $this->marketHelper->getConfigValue('stockCondition'),
-                'BestandAbsolut' 	=> $this->stockHelper->getStock($variation),
-                'Liefertyp' 		=> 'V',
-                'VersandKlasse' 	=> $shippingCost,
-                'Lieferzeit' 		=> $this->elasticExportHelper->getAvailability($variation, $settings, false),
-                'Umtausch' 			=> $this->marketHelper->getConfigValue('returnDays'),
-                'Bezeichnung' 		=> $this->elasticExportHelper->getMutatedName($variation, $settings), //. ' ' . $variation->variationBase->variationName, todo maybe add the attribute value name
-                'KurzText' 			=> $this->elasticExportHelper->getMutatedPreviewText($variation, $settings),
-                'DetailText' 		=> $this->elasticExportHelper->getMutatedDescription($variation, $settings) . ' ' . $this->propertyHelper->getPropertyListDescription($variation, $settings->get('lang')),
-                'Keywords' 			=> $variation['data']['texts']['keywords'],
-                'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
-                'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
-                'Bild3' 			=> count($imageList) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
-                'Gewicht' 			=> $variation['data']['variation']['weightG'],
-                'Preis' 			=> $priceList['price'],
-                'MwSt' 				=> $priceList['vatValue'],
-                'UVP' 				=> $priceList['recommendedRetailPrice'],
-                'Katalog1' 			=> $this->elasticExportHelper->getCategoryMarketplace((int)$variation['data']['defaultCategories'][0]['id'], (int)$settings->get('plentyId'), (int)self::KAUFLUX_DE),
-                'Flags' 			=> $flag,
-                'LinkXS' 			=> $itemCrossSellingList,
-                'ExtLinkDetail' 	=> $this->elasticExportHelper->getMutatedUrl($variation, $settings),
-                'Status' 			=> $this->getStatus($variation),
-                'FreeVar1' 			=> $variation['data']['item']['free1'],
-                'FreeVar2' 			=> $variation['data']['item']['free2'],
-                'FreeVar3' 			=> $variation['data']['item']['free3'],
-                'InhaltMenge' 		=> count($basePriceList) ? $variation['data']['unit']['content'] : '',
-                'InhaltEinheit' 	=> count($basePriceList) ? $basePriceList['unitShortName'] : '',
-                'InhaltVergleich' 	=> count($basePriceList) ? $basePriceList['recalculatedContent'] : '',
-                'HerstellerArtNr' 	=> $variation['data']['variation']['model'],
-            ];
+		$data = [
+			'GroupID' 			=> $variation['data']['item']['id'],
+			'BestellNr' 		=> $this->elasticExportHelper->generateSku($variation['id'], self::KAUFLUX_DE, 0, $variation['data']['skus'][0]['sku']),
+			'EAN' 				=> $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
+			'Hersteller' 		=> $manufacturer,
+			'BestandModus' 		=> $this->marketHelper->getConfigValue('stockCondition'),
+			'BestandAbsolut' 	=> $this->stockHelper->getStock($variation),
+			'Liefertyp' 		=> 'V',
+			'VersandKlasse' 	=> $shippingCost,
+			'Lieferzeit' 		=> $this->elasticExportHelper->getAvailability($variation, $settings, false),
+			'Umtausch' 			=> $this->marketHelper->getConfigValue('returnDays'),
+			'Bezeichnung' 		=> $this->elasticExportHelper->getMutatedName($variation, $settings), //. ' ' . $variation->variationBase->variationName, todo maybe add the attribute value name
+			'KurzText' 			=> $this->elasticExportHelper->getMutatedPreviewText($variation, $settings),
+			'DetailText' 		=> $this->elasticExportHelper->getMutatedDescription($variation, $settings) . ' ' . $this->propertyHelper->getPropertyListDescription($variation, $settings->get('lang')),
+			'Keywords' 			=> $variation['data']['texts']['keywords'],
+			'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
+			'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
+			'Bild3' 			=> count($imageList) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
+			'Gewicht' 			=> $variation['data']['variation']['weightG'],
+			'Preis' 			=> $priceList['price'],
+			'MwSt' 				=> $priceList['vatValue'],
+			'UVP' 				=> $priceList['recommendedRetailPrice'],
+			'Katalog1' 			=> $this->elasticExportHelper->getCategoryMarketplace((int)$variation['data']['defaultCategories'][0]['id'], (int)$settings->get('plentyId'), (int)self::KAUFLUX_DE),
+			'Flags' 			=> $flag,
+			'LinkXS' 			=> $itemCrossSellingList,
+			'ExtLinkDetail' 	=> $this->elasticExportHelper->getMutatedUrl($variation, $settings),
+			'Status' 			=> $this->getStatus($variation),
+			'FreeVar1' 			=> $this->elasticExportItemHelper->getFreeFields($variation['data']['item']['id'], 1),
+			'FreeVar2' 			=> $this->elasticExportItemHelper->getFreeFields($variation['data']['item']['id'], 2),
+			'FreeVar3' 			=> $this->elasticExportItemHelper->getFreeFields($variation['data']['item']['id'], 3),
+			'InhaltMenge' 		=> count($basePriceList) ? $variation['data']['unit']['content'] : '',
+			'InhaltEinheit' 	=> count($basePriceList) ? $basePriceList['unitShortName'] : '',
+			'InhaltVergleich' 	=> count($basePriceList) ? $basePriceList['recalculatedContent'] : '',
+			'HerstellerArtNr' 	=> $variation['data']['variation']['model'],
+		];
 
-            $this->addCSVContent(array_values($data));
-
-            $this->getLogger(__METHOD__)->debug('ElasticExportKaufluxDE::log.variationConstructRowFinished', [
-                'Data row duration' => 'Row printing took: ' . (microtime(true) - $rowTime),
-            ]);
-        }
-        else
-        {
-            $this->getLogger(__METHOD__)->info('ElasticExportKaufluxDE::log.variationNotPartOfExportPrice', [
-                'VariationId' => (string)$variation['id']
-            ]);
-        }
+		$this->addCSVContent(array_values($data));
     }
 
     /**
