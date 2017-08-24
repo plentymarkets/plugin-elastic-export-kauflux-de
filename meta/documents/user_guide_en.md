@@ -208,7 +208,7 @@ The following table lists details for settings, format settings and recommended 
 			Bezeichnung
 		</td>
 		<td>
-			<b>Content:</b> According to the format setting <b>item name</b>.
+			<b>Content:</b> According to the format setting <b>Item name</b>.
 		</td>        
 	</tr>
 	<tr>
@@ -240,7 +240,7 @@ The following table lists details for settings, format settings and recommended 
 			Bild1
 		</td>
 		<td>
-			<b>Content:</b> The image url. Item images are prioritizied over variation images.
+			<b>Content:</b> The image URL. Item images are prioritizied over variation images.
 		</td>        
 	</tr>
 	<tr>
@@ -248,7 +248,7 @@ The following table lists details for settings, format settings and recommended 
 			Bild2
 		</td>
 		<td>
-			<b>Content:</b> The image url. Item images are prioritizied over variation images.
+			<b>Content:</b> The image URL. Item images are prioritizied over variation images.
 		</td>        
 	</tr>
 	<tr>
@@ -256,7 +256,7 @@ The following table lists details for settings, format settings and recommended 
 			Bild3
 		</td>
 		<td>
-			<b>Content:</b> The image url. Item images are prioritizied over variation images.
+			<b>Content:</b> The image URL. Item images are prioritizied over variation images.
 		</td>        
 	</tr>
 	<tr>
@@ -320,7 +320,7 @@ The following table lists details for settings, format settings and recommended 
 			Status
 		</td>
 		<td>
-			<b>Content:</b> Status of the item: 0=sichtbar, 1=gesperrt, 2=versteckt.
+			<b>Content:</b> Status of the item: 0=visible, 1=blocked, 2=hidden.
 		</td>        
 	</tr>
 	<tr>
@@ -328,7 +328,7 @@ The following table lists details for settings, format settings and recommended 
 			FreeVar1
 		</td>
 		<td>
-			<b>Content:</b> <b>Freefield 1</b>.
+			<b>Content:</b> <b>Free text field 1</b>.
 		</td>        
 	</tr>
     <tr>
@@ -336,7 +336,7 @@ The following table lists details for settings, format settings and recommended 
 			FreeVar2
 		</td>
 		<td>
-			<b>Content:</b> <b>Freefield 2</b>.
+			<b>Content:</b> <b>Free text field 2</b>.
 		</td>        
 	</tr>
     <tr>
@@ -344,7 +344,7 @@ The following table lists details for settings, format settings and recommended 
 			FreeVar3
 		</td>
 		<td>
-			<b>Content:</b> <b>Freefield 3</b>.
+			<b>Content:</b> <b>Free text field 3</b>.
 		</td>        
 	</tr>
 	<tr>
@@ -352,7 +352,7 @@ The following table lists details for settings, format settings and recommended 
 			InhaltMenge
 		</td>
 		<td>
-			<b>Content:</b> The <b>Lot</b> of the variation (Beispiel: 250).
+			<b>Content:</b> The <b>Lot</b> of the variation (Example: 250).
 		</td>        
 	</tr>
 	<tr>
@@ -360,7 +360,7 @@ The following table lists details for settings, format settings and recommended 
 			InhaltEinheit
 		</td>
 		<td>
-			<b>Content:</b> The <b>unit</b> for the <b>lot</b> (Beispiel: ml).
+			<b>Content:</b> The <b>unit</b> for the <b>lot</b> (Example: ml).
 		</td>        
 	</tr>
 	<tr>
@@ -368,7 +368,7 @@ The following table lists details for settings, format settings and recommended 
 			InhaltVergleich
 		</td>
 		<td>
-			<b>Content:</b> The comparative amount of the netto lot for the automatic caculation of a commercially lot.
+			<b>Content:</b> The comparative amount of the net content quantity for the automatic caculation of a commercial quantity.
 		</td>        
 	</tr>
 	<tr>
