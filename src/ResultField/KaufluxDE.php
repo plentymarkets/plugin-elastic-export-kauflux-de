@@ -82,7 +82,6 @@ class KaufluxDE extends ResultFields
             $itemDescriptionFields[] = 'texts.description';
         }
         $itemDescriptionFields[] = 'texts.technicalData';
-        $itemDescriptionFields[] = 'texts.lang';
 
         //Mutator
         /**
@@ -193,11 +192,11 @@ class KaufluxDE extends ResultFields
             ],
 
             [
-                $keyMutator,
                 $languageMutator,
                 $skuMutator,
                 $defaultCategoryMutator,
                 $barcodeMutator,
+				$keyMutator,
             ],
         ];
 

@@ -303,7 +303,7 @@ class KaufluxDE extends CSVPluginGenerator
 		$basePriceList = $this->elasticExportPriceHelper->getBasePriceDetails($variation, (float)$priceList['price'], $settings->get('lang'));
 
 		// Get image list in the specified order
-		$imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, $this->elasticExportHelper::VARIATION_IMAGES);
+		$imageList = $this->elasticExportHelper->getImageListInOrder($variation, $settings, 3, ElasticExportCoreHelper::VARIATION_IMAGES);
 
 		// Get the flag for the store special
 		$flag = $this->getStoreSpecialFlag($variation);
