@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export kauflux.de
 
+## v1.0.7 (2017-09-27)
+
+### Fixed
+- An issue was fixed which caused file to be empty.
+
 ## v1.0.6 (2017-08-23) 
 
 ### Geändert
