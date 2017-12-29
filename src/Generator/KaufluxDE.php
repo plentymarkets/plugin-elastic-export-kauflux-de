@@ -147,6 +147,8 @@ class KaufluxDE extends CSVPluginGenerator
 		$this->elasticExportItemHelper = pluginApp(ElasticExportItemHelper::class, [1 => true]);
 
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
+        
+        $this->stockHelper->setAdditionalStockInformation($settings);
 
         $this->setDelimiter(self::DELIMITER);
 

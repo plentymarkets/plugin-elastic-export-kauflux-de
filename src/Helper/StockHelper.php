@@ -7,6 +7,7 @@ use Plenty\Modules\StockManagement\Stock\Contracts\StockRepositoryContract;
 use Plenty\Modules\StockManagement\Stock\Models\Stock;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Repositories\Models\PaginatedResult;
+use Plenty\Modules\Helper\Models\KeyValue;
 
 /**
  * Class StockHelper
@@ -23,6 +24,12 @@ class StockHelper
     const STOCK_NOT_AVAILABLE = 2;
 
     const STOCK_MAXIMUM_VALUE = 100;
+
+	private $stockBuffer = 0;
+
+	private $stockForVariationsWithoutStockLimitation = null;
+
+	private $stockForVariationsWithoutStockAdministration = null;
 
     /**
      * @var StockRepositoryContract
@@ -62,7 +69,7 @@ class StockHelper
         if($this->stockRepository instanceof StockRepositoryContract)
         {
             $this->stockRepository->setFilters(['variationId' => $variation['id']]);
-            $stockResult = $this->stockRepository->listStockByWarehouseType(self::STOCK_WAREHOUSE_TYPE, ['stockNet'], 1, 1);
+            $stockResult = $this->stockRepository->listStockByWarehouseType(self::STOCK_WAREHOUSE_TYPE, ['*'], 1, 1);
 
             if($stockResult instanceof PaginatedResult)
             {
@@ -93,10 +100,15 @@ class StockHelper
                 {
                     $stock = 999;
                 }
+				elseif(!is_null($this->stockForVariationsWithoutStockLimitation))
+				{
+					$stock = $this->stockForVariationsWithoutStockLimitation;
+				}
                 else
                 {
                     $stock = $stockNet;
                 }
+                
             }
             // if stock limitation is available and stock is limited
             elseif($variation['data']['variation']['stockLimitation'] == self::STOCK_AVAILABLE_LIMITED && $stockNet > 0)
@@ -107,13 +119,39 @@ class StockHelper
                 }
                 else
                 {
-                    $stock = $stockNet;
+                    $stock = $stockNet - $this->stockBuffer;
                 }
+                
+                if($stock < 0)
+                {
+                	$stock = 0;
+				}
             }
         }
 
         return $stock;
     }
+
+	/**
+	 * @param KeyValue $settings
+	 */
+	public function setAdditionalStockInformation(KeyValue $settings)
+	{
+		if(!is_null($settings->get('stockBuffer')) && $settings->get('stockBuffer') > 0)
+		{
+			$this->stockBuffer = $settings->get('stockBuffer');
+		}
+
+		if(!is_null($settings->get('stockForVariationsWithoutStockAdministration')) && $settings->get('stockForVariationsWithoutStockAdministration') > 0)
+		{
+			$this->stockForVariationsWithoutStockAdministration = $settings->get('stockForVariationsWithoutStockAdministration');
+		}
+
+		if(!is_null($settings->get('stockForVariationsWithoutStockLimitation')) && $settings->get('stockForVariationsWithoutStockLimitation') > 0)
+		{
+			$this->stockForVariationsWithoutStockLimitation = $settings->get('stockForVariationsWithoutStockLimitation');
+		}
+	}
 
 
     /**
