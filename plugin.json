@@ -10,13 +10,13 @@
   "pluginIcon": "icon_plugin_md.png",
   "price": 0.00,
   "shortDescription": {
-    "de": "Die Integration des Datenformats KaufluxDE-Plugin ermöglicht die Artikeldatenübertragung zum Preisportal kauflux.de über den elastischen Export.",
-    "en": "The integration of the data format KaufluxDE-Plugin enables the transfer of item data to the price search engine kauflux.de via the elastic export."
+    "de": "Übertragung der Artikeldaten zum Online-Marktplatz Kauflux.de über den elastischen Export.",
+    "en": "Item export to the online market Kauflux.de via the elastic export."
   },
   "categories": [
     "3523"
   ],
-  "version": "1.1.1",
+  "version": "1.1.2",
   "require": ["ElasticExport"],
   "marketplaceName": {
     "de": "kauflux.de",
