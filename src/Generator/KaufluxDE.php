@@ -5,6 +5,7 @@ namespace ElasticExportKaufluxDE\Generator;
 use ElasticExport\Helper\ElasticExportItemHelper;
 use ElasticExport\Helper\ElasticExportPriceHelper;
 use ElasticExport\Helper\ElasticExportStockHelper;
+use ElasticExport\Services\FiltrationService;
 use ElasticExportKaufluxDE\Helper\MarketHelper;
 use ElasticExportKaufluxDE\Helper\PropertyHelper;
 use ElasticExportKaufluxDE\Helper\StockHelper;
@@ -99,6 +100,11 @@ class KaufluxDE extends CSVPluginGenerator
     private $addedItems = [];
 
     /**
+     * @var FiltrationService
+     */
+    private $filtrationService;
+
+    /**
      * @var array
      */
     private $flags = [
@@ -139,14 +145,12 @@ class KaufluxDE extends CSVPluginGenerator
     protected function generatePluginContent($elasticSearch, array $formatSettings = [], array $filter = [])
     {
         $this->elasticExportHelper = pluginApp(ElasticExportCoreHelper::class);
-
         $this->elasticExportStockHelper = pluginApp(ElasticExportStockHelper::class);
-
         $this->elasticExportPriceHelper = pluginApp(ElasticExportPriceHelper::class);
-
 		$this->elasticExportItemHelper = pluginApp(ElasticExportItemHelper::class, [1 => true]);
 
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
+        $this->filtrationService = pluginApp(FiltrationService::class, [$settings, $filter]);
         
         $this->stockHelper->setAdditionalStockInformation($settings);
 
@@ -193,7 +197,7 @@ class KaufluxDE extends CSVPluginGenerator
                         }
 
                         // If filtered by stock is set and stock is negative, then skip the variation
-                        if($this->elasticExportStockHelper->isFilteredByStock($variation, $filter) === true)
+                        if($this->filtrationService->filter($variation))
                         {
                             continue;
                         }

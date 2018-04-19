@@ -1,5 +1,11 @@
 # Release Notes for Elastic Export kauflux.de
 
+## v1.1.3 (2018-04-19)
+
+### Changed
+- The class FiltrationService is responsible for the filtration of all variations.
+- Preview images updated. 
+
 ## v1.1.2 (2018-02-21)
 
 ### Changed
