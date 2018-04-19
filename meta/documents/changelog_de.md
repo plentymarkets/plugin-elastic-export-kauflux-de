@@ -6,6 +6,12 @@
 - Die Klasse FiltrationService übernimmt die Filtrierung der Varianten.
 - Vorschaubilder aktualisiert.
 
+## v1.1.3 (2018-04-19)
+
+### Geändert
+- Die Filtrierung der Varianten wird nun durch die Klasse FiltrationService vorgenommen.
+- Vorschaubilder aktualisiert.
+
 ## v1.1.2 (2018-02-21)
 
 ### Geändert
