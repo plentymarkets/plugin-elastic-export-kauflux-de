@@ -1,5 +1,11 @@
 # Release Notes für Elastic Export kauflux.de
 
+## v1.1.3 (2018-04-19)
+
+### Geändert
+- Die Klasse FiltrationService übernimmt die Filtrierung der Varianten.
+- Vorschaubilder aktualisiert.
+
 ## v1.1.2 (2018-02-21)
 
 ### Geändert
