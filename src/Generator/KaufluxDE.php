@@ -150,7 +150,7 @@ class KaufluxDE extends CSVPluginGenerator
 		$this->elasticExportItemHelper = pluginApp(ElasticExportItemHelper::class, [1 => true]);
 
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
-        $this->filtrationService = pluginApp(FiltrationService::class, [$settings, $filter]);
+		$this->filtrationService = pluginApp(FiltrationService::class, ['settings' => $settings, 'filterSettings' => $filter]);
         
         $this->stockHelper->setAdditionalStockInformation($settings);
 

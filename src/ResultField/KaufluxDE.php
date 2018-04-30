@@ -48,7 +48,9 @@ class KaufluxDE extends ResultFields
 
         $reference = $settings->get('referrerId') ? $settings->get('referrerId') : self::KAUFLUX_DE;
 
-        $this->setOrderByList(['item.id', ElasticSearch::SORTING_ORDER_ASC]);
+		$this->setOrderByList([
+			'path' => 'item.id',
+			'order' => ElasticSearch::SORTING_ORDER_ASC]);
 
         $itemDescriptionFields = ['texts.urlPath', 'texts.lang', 'texts.keywords'];
 
