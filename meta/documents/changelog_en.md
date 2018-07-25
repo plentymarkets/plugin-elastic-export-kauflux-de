@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export kauflux.de
 
+## v1.1.5 (2018-07-25)
+
+### Changed
+- Further information about setting up the plugin was added to the user guide.
+
 ## v1.1.4 (2018-04-30)
 
 ### Changed

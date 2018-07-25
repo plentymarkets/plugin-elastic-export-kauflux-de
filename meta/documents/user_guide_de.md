@@ -5,398 +5,100 @@
 
 ## 1 Bei kauflux.de registrieren
 
-Auf dem Marktplatz kauflux.de bieten Sie Ihre Artikel zum Verkauf an. Weitere Informationen zu diesem Marktplatz finden Sie auf der Handbuchseite [kauflux einrichten](https://www.plentymarkets.eu/handbuch/multi-channel/kauflux/).
+Auf dem Marktplatz Kauflux.de bieten Sie Ihre Artikel zum Verkauf an. Weitere Informationen zu diesem Marktplatz finden Sie auf der Handbuchseite [Kauflux einrichten](https://knowledge.plentymarkets.com/omni-channel/multi-channel/kauflux).
 
 ## 2 Das Format KaufluxDE-Plugin in plentymarkets einrichten
 
-Um dieses Format nutzen zu können, benötigen Sie das Plugin Elastic Export.
+Mit der Installation dieses Plugins erhalten Sie das Exportformat **KaufluxDE-Plugin**, mit dem Sie Daten über den elastischen Export zu Kauflux.de übertragen. Um dieses Format für den elastischen Export nutzen zu können, installieren Sie zunächst das Plugin **Elastic Export** aus dem plentyMarketplace, wenn noch nicht geschehen. 
 
-Auf der Handbuchseite [Daten exportieren](https://www.plentymarkets.eu/handbuch/datenaustausch/daten-exportieren/#4) werden die einzelnen Formateinstellungen beschrieben.
+Sobald beide Plugins in Ihrem System installiert sind, kann das Exportformat **KaufluxDE-Plugin** erstellt werden. Weitere Informationen finden Sie auch auf der Handbuchseite [Daten über dynamischen Export exportieren](https://knowledge.plentymarkets.com/basics/datenaustausch/export-import/daten-exportieren#30).
 
-In der folgenden Tabelle finden Sie Hinweise zu den Einstellungen, Formateinstellungen und empfohlenen Artikelfiltern für das Format **KaufluxDE-Plugin**.
-<table>
-    <tr>
-        <th>
-            Einstellung
-        </th>
-        <th>
-            Erläuterung
-        </th>
-    </tr>
-    <tr>
-        <td class="th" colspan="2">
-            Einstellungen
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Format
-        </td>
-        <td>
-            <b>KaufluxDE-Plugin</b> wählen.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            Bereitstellung
-        </td>
-        <td>
-            <b>URL</b> wählen.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            Dateiname
-        </td>
-        <td>
-            Der Dateiname muss auf <b>.csv</b> oder <b>.txt</b> enden, damit Kauflux.de die Datei erfolgreich importieren kann.
-        </td>        
-    </tr>
-    <tr>
-        <td class="th" colspan="2">
-            Artikelfilter
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Aktiv
-        </td>
-        <td>
-            <b>Aktiv</b> wählen.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            Märkte
-        </td>
-        <td>
-            Eine oder mehrere Auftragsherkünfte wählen. Die gewählten Auftragsherkünfte müssen an der Variante aktiviert sein, damit der Artikel exportiert wird.
-        </td>        
-    </tr>
-    <tr>
-        <td class="th" colspan="2">
-            Formateinstellungen
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Auftragsherkunft
-        </td>
-        <td>
-            Die Auftragsherkunft wählen, die beim Auftragsimport zugeordnet werden soll.
-        </td>        
-    </tr>
-    <tr>
-    	<td>
-    		Bestandspuffer
-    	</td>
-    	<td>
-    		Der Bestandspuffer für Varianten mit der Beschränkung auf den Netto Warenbestand.
-    	</td>        
-    </tr>
-    <tr>
-    	<td>
-    		Bestand für Varianten ohne Bestandsbeschränkung
-    	</td>
-    	<td>
-    		Der Bestand für Varianten ohne Bestandsbeschränkung.
-    	</td>        
-    </tr>
-    <tr>
-    	<td>
-    		Bestand für Varianten ohne Bestandsführung
-    	</td>
-    	<td>
-    		Der Bestand für Varianten ohne Bestandsführung.
-    	</td>        
-    </tr>
-    <tr>
-        <td>
-            Angebotspreis
-        </td>
-        <td>
-            Diese Option ist für dieses Format nicht relevant.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            MwSt.-Hinweis
-        </td>
-        <td>
-            Diese Option ist für dieses Format nicht relevant.
-        </td>        
-    </tr>
-</table>
+Neues Exportformat erstellen:
 
+1. Öffnen Sie das Menü **Daten » Elastischer Export**.
+2. Klicken Sie auf **Neuer Export**.
+3. Nehmen Sie die Einstellungen vor. Beachten Sie dazu die Erläuterungen in Tabelle 1.
+4. **Speichern** Sie die Einstellungen.
+→ Eine ID für das Exportformat **KaufluxDE-Plugin** wird vergeben und das Exportformat erscheint in der Übersicht **Exporte**.
 
-## 3 Übersicht der verfügbaren Spalten
+In der folgenden Tabelle finden Sie Hinweise zu den einzelnen Formateinstellungen und empfohlenen Artikelfiltern für das Format **KaufluxDE-Plugin**.
 
-<table>
-    <tr>
-        <th>
-            Spaltenbezeichnung
-        </th>
-        <th>
-            Erläuterung
-        </th>
-    </tr>
-    <tr>
-		<td>
-			ProductID
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Artikel-ID</b> der Variante.
-		</td>        
-	</tr>
-    <tr>
-		<td>
-			BestellNr
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>SKU</b> der Variante.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			EAN
-		</td>
-		<td>
-			<b>Inhalt:</b> Entsprechend der Formateinstellung <b>Barcode</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Hersteller
-		</td>
-		<td>
-			<b>Inhalt:</b> Der <b>Name des Herstellers</b> des Artikels. Der <b>Externe Name</b> unter <b>Einstellungen » Artikel » Hersteller</b> wird bevorzugt, wenn vorhanden.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			BestandModus
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Art der Bestandsführung</b>, welche eingestellt wird unter Einstellungen » Märkte » Kauflux » Grundeinstellungen.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			BestandAbsolut
-		</td>
-		<td>
-			<b>Inhalt:</b> Der <b>Netto-Warenbestand der Variante</b>. Bei Artikeln, die nicht auf den Netto-Warenbestand beschränkt sind, wird <b>999</b> übertragen.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Liefertyp
-		</td>
-		<td>
-			<b>Inhalt:</b> Art der Lieferung dieses Artikels: V = Versand
-		</td>
-	</tr>
-	<tr>
-		<td>
-			VersandKlasse
-		</td>
-		<td>
-			<b>Inhalt:</b> Entsprechend der Formateinstellung <b>Versandkosten</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Lieferzeit
-		</td>
-		<td>
-			<b>Content:</b>Der <b>Name der Artikelverfügbarkeit</b> unter <b>Einstellungen » Artikel » Artikelverfügbarkeit</b> oder die Übersetzung gemäß der Formateinstellung <b>Artikelverfügbarkeit</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Umtausch
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Umtauschfrist nach Lieferung in Tagen</b>, welche unter Einstellungen » Märkte » Kauflux » Grundeinstellungen eingestellt wird.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bezeichnung
-		</td>
-		<td>
-			<b>Inhalt:</b> Entsprechend der Formateinstellung <b>Artikelname</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			KurzText
-		</td>
-		<td>
-			<b>Inhalt:</b> Entsprechend der Formateinstellung <b>Vorschautext</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			DetailText
-		</td>
-		<td>
-			<b>Inhalt:</b> Entsprechend der Formateinstellung <b>Beschreibung</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Keywords
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Keywords</b> des Artikels.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bild1
-		</td>
-		<td>
-			<b>Inhalt:</b> URL des Bildes. Variantenbiler werden vor Artikelbildern priorisiert.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bild2
-		</td>
-		<td>
-			<b>Inhalt:</b> URL des Bildes. Variantenbiler werden vor Artikelbildern priorisiert.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bild3
-		</td>
-		<td>
-			<b>Inhalt:</b> URL des Bildes. Variantenbiler werden vor Artikelbildern priorisiert.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Gewicht
-		</td>
-		<td>
-			<b>Inhalt:</b> Gesamtgewicht in Gramm.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Preis
-		</td>
-		<td>
-			<b>Inhalt:</b> Hier steht der <b>Verkaufspreis</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			MwSt
-		</td>
-		<td>
-			<b>Inhalt:</b> Die Mehrwertsteuer in %.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			UVP
-		</td>
-		<td>
-			<b>Inhalt:</b> Der <b>Verkaufspreis</b> der Variante. Wenn der <b>UVP</b> in den Formateinstellungen aktiviert wurde und höher ist als der Verkaufspreis, wird dieser hier eingetragen.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Katalog1
-		</td>
-		<td>
-			<b>Inhalt:</b> Der Name der Kategorie.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Flags
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Shop-Aktion</b> des Artikels.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			ExtLinkDetail
-		</td>
-		<td>
-			<b>Inhalt:</b> Der <b>URL-Pfad</b> des Artikels abhängig vom gewählten <b>Mandanten</b> in den Formateinstellungen.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Status
-		</td>
-		<td>
-			<b>Inhalt:</b> Status des Artikels: 0=sichtbar, 1=gesperrt, 2=versteckt.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			FreeVar1
-		</td>
-		<td>
-			<b>Inhalt:</b> <b>Freitextfeld 1</b>.
-		</td>        
-	</tr>
-    <tr>
-		<td>
-			FreeVar2
-		</td>
-		<td>
-			<b>Inhalt:</b> <b>Freitextfeld 2</b>.
-		</td>        
-	</tr>
-    <tr>
-		<td>
-			FreeVar3
-		</td>
-		<td>
-			<b>Inhalt:</b> <b>Freitextfeld 3</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			InhaltMenge
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Menge</b> der Variante (Beispiel: 250).
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			InhaltEinheit
-		</td>
-		<td>
-			<b>Inhalt:</b> Die <b>Einheit</b> der <b>Menge</b> (Beispiel: ml).
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			InhaltVergleich
-		</td>
-		<td>
-			<b>Inhalt:</b> Vergleichsmenge der Netto-Inhaltsmenge zur automatischen Berechnung des Preises einer handelsüblichen Menge.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			HerstellerArtNr
-		</td>
-		<td>
-			<b>Inhalt:</b> Das <b>Modell</b> der Variante.
-		</td>        
-	</tr>
-</table>
+| **Einstellung**                                     | **Erläuterung** | 
+| :---                                                | :--- |
+| **Einstellungen**                                   | |
+| **Name**                                            | Name eingeben. Unter diesem Namen erscheint das Exportformat in der Übersicht im Tab **Exporte**. |
+| **Typ**                                             | Typ **Artikel** aus der Dropdown-Liste wählen. |
+| **Format**                                          | **KaufluxDE-Plugin** wählen. |
+| **Limit**                                           | Zahl eingeben. Wenn mehr als 9999 Datensätze an Kauflux übertragen werden sollen, wird die Ausgabedatei wird für 24 Stunden nicht noch einmal neu generiert, um Ressourcen zu sparen. Wenn mehr mehr als 9999 Datensätze benötigt werden, muss die Option **Cache-Datei generieren** aktiv sein. |
+| **Cache-Datei generieren**                          | Häkchen setzen, wenn mehr als 9999 Datensätze an Kauflux übertragen werden sollen. Um eine optimale Performance des elastischen Exports zu gewährleisten, darf diese Option bei maximal 20 Exportformaten aktiv sein. |
+| **Bereitstellung**                                  | **URL** wählen. Mit dieser Option kann ein Token für die Authentifizierung generiert werden, damit ein externer Zugriff möglich ist. |
+| **Token, URL**                                      | Wenn unter **Bereitstellung** die Option **URL** gewählt wurde, auf **Token generieren** klicken. Der Token wird dann automatisch eingetragen. Die URL wird automatisch eingetragen, wenn unter **Token** der Token generiert wurde. |
+| **Dateiname**                                       | Der Dateiname muss auf **.csv** oder **.txt** enden, damit Kauflux die Datei erfolgreich importieren kann. |
+| **Artikelfilter**                                   | |
+| **Artikelfilter hinzufügen**                        | Artikelfilter aus der Dropdown-Liste wählen und auf **Hinzufügen** klicken. Standardmäßig sind keine Filter voreingestellt. Es ist möglich, alle Artikelfilter aus der Dropdown-Liste nacheinander hinzuzufügen.<br/> **Varianten** = **Alle übertragen** oder **Nur Hauptvarianten übertragen** wählen.<br/> **Märkte** = Eine oder mehrere Auftragsherkünfte wählen. Die gewählten Auftragsherkünfte müssen an der Variante aktiviert sein, damit der Artikel exportiert wird.<br/> **Währung** = Währung wählen.<br/> **Kategorie** = Aktivieren, damit der Artikel mit Kategorieverknüpfung übertragen wird. Es werden nur Artikel, die dieser Kategorie zugehören, übertragen.<br/> **Bild** = Aktivieren, damit der Artikel mit Bild übertragen wird. Es werden nur Artikel mit Bildern übertragen.<br/> **Mandant** = Mandant wählen.<br/> **Bestand** = Wählen, welche Bestände exportiert werden sollen.<br/> **Markierung 1 - 2** = Markierung wählen.<br/> **Hersteller** = Einen, mehrere oder **ALLE** Hersteller wählen.<br/> **Aktiv** = **Aktiv** wählen. Nur aktive Varianten werden übertragen. |
+| **Formateinstellungen**                             | |
+| **Produkt-URL**                                     | Wählen, ob die URL des Artikels oder der Variante an Kauflux übertragen wird. Varianten URLs können nur in Kombination mit dem Ceres Webshop übertragen werden. |
+| **Mandant**                                         | Mandant wählen. Diese Einstellung wird für den URL-Aufbau verwendet. |
+| **URL-Parameter**                                   | Suffix für die Produkt-URL eingeben, wenn dies für den Export erforderlich ist. Die Produkt-URL wird dann um die eingegebene Zeichenkette erweitert, wenn weiter oben die Option **übertragen** für die Produkt-URL aktiviert wurde. |
+| **Auftragsherkunft**                                | Aus der Dropdown-Liste die Auftragsherkunft wählen, die beim Auftragsimport zugeordnet werden soll. |
+| **Marktplatzkonto**                                 | Marktplatzkonto aus der Dropdown-Liste wählen. Die Produkt-URL wird um die gewählte Auftragsherkunft erweitert, damit die Verkäufe später analysiert werden können. |
+| **Sprache**                                         | Sprache aus der Dropdown-Liste wählen. |
+| **Artikelname**                                     | **Name 1**, **Name 2** oder **Name 3** wählen. Die Namen sind im Tab **Texte** eines Artikels gespeichert. Im Feld **Maximale Zeichenlänge (def. Text)** optional eine Zahl eingeben, wenn Kauflux eine Begrenzung der Länge des Artikelnamen beim Export vorgibt. |
+| **Vorschautext**                                    | Wählen, ob und welcher Text als Vorschautext übertragen werden soll.<br/> Im Feld **Maximale Zeichenlänge (def. Text)** optional eine Zahl eingeben, wenn Kauflux eine Begrenzung der Länge des Vorschautextes beim Export vorgibt.<br/> Option **HTML-Tags entfernen** aktivieren, damit die HTML-Tags beim Export entfernt werden.<br/> Im Feld **Erlaubte HTML-Tags, kommagetrennt (def. Text)** optional die HTML-Tags eingeben, die beim Export erlaubt sind. Wenn mehrere Tags eingegeben werden, mit Komma trennen. |
+| **Beschreibung**                                    | Wählen, welcher Text als Beschreibungstext übertragen werden soll.<br/> Im Feld **Maximale Zeichenlänge (def. Text)** optional eine Zahl eingeben, wenn die Preissuchmaschine eine Begrenzung der Länge der Beschreibung beim Export vorgibt.<br/> Option **HTML-Tags entfernen** aktivieren, damit die HTML-Tags beim Export entfernt werden.<br/> Im Feld **Erlaubte HTML-Tags, kommagetrennt (def. Text)** optional die HTML-Tags eingeben, die beim Export erlaubt sind. Wenn mehrere Tags eingegeben werden, mit Komma trennen. |
+| **Zielland**                                        | Zielland aus der Dropdown-Liste wählen. |
+| **Barcode**                                         | ASIN, ISBN oder eine EAN aus der Dropdown-Liste wählen. Der gewählte Barcode muss mit der oben gewählten Auftragsherkunft verknüpft sein. Andernfalls wird der Barcode nicht exportiert. |
+| **Bild**                                            | **Position 0** oder **Erstes Bild** wählen, um dieses Bild zu exportieren.<br/> **Position 0** = Ein Bild mit der Position 0 wird übertragen.<br/> **Erstes Bild** = Das erste Bild wird übertragen. |
+| **Bildposition des Energieetiketts**                | Diese Option ist für dieses Format nicht relevant. |
+| **Bestandspuffer**                                  | Der Bestandspuffer für Varianten mit der Beschränkung auf den Netto-Warenbestand. |
+| **Bestand für Varianten ohne Bestandsbeschränkung** | Der Bestand für Varianten ohne Bestandsbeschränkung. |
+| **Bestand für Varianten ohne Bestandsführung**      | Der Bestand für Varianten ohne Bestandsführung. |
+| **Währung live umrechnen**                          | Aktivieren, damit der Preis je nach eingestelltem Lieferland in die Währung des Lieferlandes umgerechnet wird. Der Preis muss für die entsprechende Währung freigegeben sein. |
+| **Verkaufspreis**                                   | Brutto- oder Nettopreis aus der Dropdown-Liste wählen. |
+| **Angebotspreis**                                   | Diese Option ist für dieses Format nicht relevant. |
+| **UVP**                                             | Aktivieren, um den UVP zu übertragen. |
+| **Versandkosten**                                   | Aktivieren, damit die Versandkosten aus der Konfiguration übernommen werden. Wenn die Option aktiviert ist, stehen in den beiden Dropdown-Listen Optionen für die Konfiguration und die Zahlungsart zur Verfügung. Option **Pauschale Versandkosten übertragen** aktivieren, damit die pauschalen Versandkosten übertragen werden. Wenn diese Option aktiviert ist, muss im Feld darunter ein Betrag eingegeben werden. |
+| **MwSt.-Hinweis**                                   | Diese Option ist für dieses Format nicht relevant. |
+| **Artikelverfügbarkeit**                            | Option **überschreiben** aktivieren und in die Felder **1** bis **10**, die die ID der Verfügbarkeit darstellen, Artikelverfügbarkeiten eintragen. Somit werden die Artikelverfügbarkeiten, die im Menü **System » Artikel » Verfügbarkeit** eingestellt wurden, überschrieben. |
+       
+_Tab. 1: Einstellungen für das Datenformat **KaufluxDE-Plugin**_
+
+## 3 Verfügbare Spalten der Exportdatei
+
+| **Spaltenbezeichnung** | **Erläuterung** |
+| :---                   | :--- |
+| ProductID              | Die Artikel-ID der Variante. |
+| BestellNr              | Die SKU der Variante. |
+| EAN                    | Entsprechend der Formateinstellung **Barcode**. |
+| Hersteller             | Der **Name des Herstellers** des Artikels. Der **Externe Name** unter **System » Artikel » Hersteller** wird bevorzugt, wenn vorhanden. |
+| BestandModus           | Die **Art der Bestandsführung**, welche eingestellt wird unter **System » Märkte » Kauflux » Einstellungen**. |
+| BestandAbsolut         | Der Netto-Warenbestand der Variante. Bei Artikeln, die nicht auf den Netto-Warenbestand beschränkt sind, wird 999 übertragen. |
+| Liefertyp              | Art der Lieferung des Artikels: V = Versand. |
+| VersandKlasse          | Entsprechend der Formateinstellung **Versandkosten**. |
+| Lieferzeit             | Der Name der Artikelverfügbarkeit unter **System » Artikel » Verfügbarkeit** oder die Übersetzung gemäß der Formateinstellung **Artikelverfügbarkeit**. |
+| Umtausch               | Die Umtauschfrist nach Lieferung in Tagen, welche unter **System » Märkte » Kauflux » Einstellungen** eingestellt wird. |
+| Bezeichnung            | Entsprechend der Formateinstellung **Artikelname**. |
+| KurzText               | Entsprechend der Formateinstellung **Vorschautext**. |
+| DetailText             | Entsprechend der Formateinstellung **Beschreibung**. |
+| Keywords               | Die Keywords des Artikels. |
+| Bild1                  | URL des Bildes. Variantenbilder werden vor Artikelbildern priorisiert. |
+| Bild2                  | URL des Bildes. Variantenbilder werden vor Artikelbildern priorisiert. |
+| Bild3                  | URL des Bildes. Variantenbilder werden vor Artikelbildern priorisiert. |
+| Gewicht                | Gesamtgewicht in Gramm. |
+| Preis                  | Hier steht der Verkaufspreis. |
+| MwSt                   | Die Mehrwertsteuer in %. |
+| UVP                    | Der Verkaufspreis der Variante. Wenn der UVP in den Formateinstellungen aktiviert wurde und höher ist als der Verkaufspreis, wird dieser hier eingetragen. |
+| Katalog1               | Der Name der Kategorie. |
+| Flags                  | Die Shop-Aktion des Artikels. |
+| ExtLinkDetail          | Der URL-Pfad des Artikels abhängig vom gewählten **Mandanten** in den Formateinstellungen. |
+| Status                 | Status des Artikels: **0** = sichtbar; **1** = gesperrt; **2** = versteckt. |
+| FreeVar1               | Freitextfeld 1 |
+| FreeVar2               | Freitextfeld 2 |
+| FreeVar3               | Freitextfeld 3 |
+| InhaltMenge            | Die Menge der Variante (Beispiel: 250). |
+| InhaltEinheit          | Die Einheit der Menge (Beispiel: ml). |
+| InhaltVergleich        | Vergleichsmenge der Netto-Inhaltsmenge zur automatischen Berechnung des Preises einer handelsüblichen Menge. |
+| HerstellerArtNr        | Das Modell der Variante. |
 
 ## 4 Lizenz
 
