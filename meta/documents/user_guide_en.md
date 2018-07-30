@@ -5,405 +5,100 @@
 
 ## 1 Registering with kauflux.de
 
-Items are sold on the market kauflux.de. For further information about this market, refer to the [Setting up kauflux](https://www.plentymarkets.eu/handbuch/multi-channel/kauflux/) page of the manual.
+Items are sold on the market kauflux.de. For further information about this market, refer to the [Kauflux](https://knowledge.plentymarkets.com/en/omni-channel/multi-channel/kauflux) page of the manual.
 
 ## 2 Setting up the data format KaufluxDE-Plugin in plentymarkets
 
-The plugin Elastic Export is required to use this format.
+By installing this plugin you will receive the export format **KaufluxDE-Plugin**. Use this format to exchange data between plentymarkets and Kauflux. It is required to install the Plugin **Elastic export** from the plentyMarketplace first before you can use the format **KaufluxDE-Plugin** in plentymarkets.
 
-Refer to the [Exporting data formats for price search engines](https://knowledge.plentymarkets.com/en/basics/data-exchange/exporting-data#30) page of the manual for further details about the individual format settings.
+Once both plugins are installed, you can create the export format **KaufluxDE-Plugin**. Refer to the [Exporting data formats for price search engines](https://knowledge.plentymarkets.com/en/basics/data-exchange/export-import/exporting-data#30) page of the manual for further details about the individual format settings.
+
+Creating a new export format:
+
+1. Go to **Data » Elastic export**.
+2. Click on **New export**.
+3. Carry out the settings as desired. Pay attention to the information given in table 1.
+4. **Save** the settings.
+→ The export format is given an ID and it appears in the overview within the **Exports** tab.
 
 The following table lists details for settings, format settings and recommended item filters for the format **KaufluxDE-Plugin**.
-<table>
-    <tr>
-        <th>
-            Settings
-        </th>
-        <th>
-            Explanation
-        </th>
-    </tr>
-    <tr>
-        <td class="th" colspan="2">
-            Settings
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Format
-        </td>
-        <td>
-            Choose <b>KaufluxDE-Plugin</b>.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            Provisioning
-        </td>
-        <td>
-            Choose <b>URL</b>.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            File name
-        </td>
-        <td>
-            The file name must have the ending <b>.csv</b> or <b>.txt</b> for kauflux.de to be able to import the file successfully.
-        </td>        
-    </tr>
-    <tr>
-        <td class="th" colspan="2">
-            Item filter
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Active
-        </td>
-        <td>
-            Choose <b>active</b>.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            Markets
-        </td>
-        <td>
-            Choose one or multiple order referrers. The chosen order referrer has to be active at the variation for the item to be exported.
-        </td>        
-    </tr>
-    <tr>
-        <td class="th" colspan="2">
-            Format settings
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Order referrer
-        </td>
-        <td>
-            Choose the order referrer that should be assigned during the order import.
-        </td>        
-    </tr>
-    <tr>
-    	<td>
-    		Stockbuffer
-    	</td>
-    	<td>
-    		The stock buffer for variations with the limitation to the netto stock.
-    	</td>        
-    </tr>
-    <tr>
-    	<td>
-    		Stock for Variations without stock limitation
-    	</td>
-    	<td>
-    		The stock for variations without stock limitation.
-    	</td>        
-    </tr>
-    <tr>
-    	<td>
-    		The stock for variations with not stock administration
-    	</td>
-    	<td>
-    		The stock for variations without stock administration.
-    	</td>        
-    </tr>
-    <tr>
-        <td>
-            Preview text
-        </td>
-        <td>
-            This option is not relevant for this format.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            Offer price
-        </td>
-        <td>
-            This option is not relevant for this format.
-        </td>        
-    </tr>
-    <tr>
-        <td>
-            VAT note
-        </td>
-        <td>
-            This option is not relevant for this format.
-        </td>        
-    </tr>
-</table>
 
-## 3 Overview of available columns
+| **Setting**                                           | **Explanation** | 
+| :---                                                  | :--- |
+| **Settings**                                          | |
+| **Name**                                              | Enter a name. The export format is listed under this name in the overview within the **Exports** tab. |
+| **Type**                                              | Select the type **Item** from the drop-down list. |
+| **Format**                                            | Select **KaufluxDE-Plugin**. |
+| **Limit**                                             | Enter a number. If you want to transfer more than 9,999 data records to Kauflux, then the output file will not be generated again for another 24 hours. This is to save resources. If more than 9,999 data records are necessary, the setting **Generate cache file** has to be active. |
+| **Generate cache file**                               | Place a check mark if you want to transfer more than 9,999 data records to Kauflux. The output file will not be generated again for another 24 hours. We recommend not to activate this setting for more than 20 export formats. This is to save resources. |
+| **Provisioning**                                      | Select **URL**. This option generates a token for authentication in order to allow external access. |
+| **Token, URL**                                        | If you have selected the option **URL** under **Provisioning**, then click on **Generate token**. The token will be entered automatically. When the token is generated under **Token**, the URL is entered automatically. |
+| **File name**                                         | The file name must have the ending **.csv** or **.txt** for Kauflux to be able to import the file successfully. |
+| **Item filters**                                      | |
+| **Add item filters**                                  | Select an item filter from the drop-down list and click on **Add**. There are no filters set in default. It is possible to add multiple item filters from the drop-down list one after the other.<br/> **Variations** = Select **Transfer all** or **Only transfer main variations**.<br/> **Markets** = Select one or multiple order referrers. The chosen order referrer has to be active at the variation for the item to be exported.<br/> <br/> **Currency** = Select a currency.<br/> **Category** = Activate to transfer the item with its category link. Only items belonging to this category are exported.<br/> **Image** = Activate to transfer the item with its image. Only items with images are transferred.<br/> **Client** = Select client.<br/> **Stock** = Select which stocks you want to export.<br/> **Flag 1 - 2** = Select the flag.<br/> **Manufacturer** = Select one, several or **ALL** manufacturers.<br/> **Active** = Select **Active**. Only active variations are exported. |
+| **Format settings**                                   | |
+| **Product URL**                                       | Choose which URL should be transferred to the price comparison portal, the item’s URL or the variation’s URL. Variation SKUs can only be transferred in combination with the Ceres store. |
+| **Client**                                            | Select a client. This setting is used for the URL structure. |
+| **URL parameter**                                     | Enter a suffix for the product URL if this is required for the export. If you have activated the transfer option for the product URL further up, then this character string will be added to the product URL. |
+| **Order referrer**                                    | Select the order referrer that should be assigned during the order import from the drop-down list. |
+| **Marketplace account**                               | Select the marketplace account from the drop-down list. The selected referrer is added to the product URL so that sales can be analysed later. |
+| **Language**                                          | Select the language from the drop-down list. |
+| **Item name**                                         | Select **Name 1**, **Name 2** or **Name 3**. These names are saved in the **Texts** tab of the item. Enter a number into the **Maximum number of characters (def. Text)** field if desired. This specifies how many characters should be exported for the item name. |
+| **Preview text**                                      | This option does not affect this format. |
+| **Description**                                       | Select the text that you want to transfer as description.<br/> Enter a number into the **Maximum number of characters (def. text)** field if desired. This specifies how many characters should be exported for the description.<br/> Activate the option **Remove HTML tags** if you want HTML tags to be removed during the export. If you only want to allow specific HTML tags to be exported, then enter these tags into the field **Permitted HTML tags, separated by comma (def. Text)**. Use commas to separate multiple tags. |
+| **Target country**                                    | Select the target country from the drop-down list. |
+| **Barcode**                                           | Select the ASIN, ISBN or an EAN from the drop-down list. The barcode has to be linked to the order referrer selected above. If the barcode is not linked to the order referrer it will not be exported. |
+| **Image**                                             | Select **Position 0** or **First image** to export this image.<br/> **Position 0** = An image with position 0 will be transferred.<br/> **First image** = The first image will be transferred. |
+| **Image position of the energy efficiency label**     | This option does not affect this format. |
+| **Stockbuffer**                                       | The stock buffer for variations with limitation to the net stock. |
+| **Stock for variations without stock limitation**     | The stock for variations without stock limitation. |
+| **Stock for variations with no stock administration** | The stock for variations without stock administration. |
+| **Live currency conversion**                          | Activate this option to convert the price into the currency of the selected country of delivery. The price has to be released for the corresponding currency. |
+| **Retail price**                                      | Select gross price or net price from the drop-down list. |
+| **Offer price**                                       | This option does not affect this format. |
+| **RRP**                                               | Activate to transfer the RRP. |
+| **Shipping costs**                                    | Activate this option if you want to use the shipping costs that are saved in a configuration. If this option is activated, then you will be able to select the configuration and the payment method from the drop-down lists.<br/> Activate the option **Transfer flat rate shipping charge** if you want to use a fixed shipping charge. If this option is activated, a value has to be entered in the line underneath. |
+| **VAT Note**                                          | This option does not affect this format. |
+| **Item availability**                                 | Activate the **overwrite** option and enter item availabilities into the fields **1** to **10**. The fields represent the IDs of the availabilities. This will overwrite the item availabilities that are saved in the menu **System » Item » Availability**. |
+       
+_Tab. 1: Settings for the data format **KaufluxDE-Plugin**_
 
-<table>
-    <tr>
-        <th>
-			Column name
-		</th>
-		<th>
-			Explanation
-		</th>
-    </tr>
-    <tr>
-		<td>
-			ProductID
-		</td>
-		<td>
-			<b>Content:</b> The <b>item ID</b> of the variation.
-		</td>        
-	</tr>
-    <tr>
-		<td>
-			BestellNr
-		</td>
-		<td>
-			<b>Content:</b> The <b>SKU</b> of the variation.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			EAN
-		</td>
-		<td>
-			<b>Content:</b> According to the format setting <b>Barcode</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Hersteller
-		</td>
-		<td>
-			<b>Content:</b> The <b>name of the manufacturer</b> of the item. The <b>external name</b> in the menu <b>Settings » Items » Manufacturer</b> will be preferred if existing.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			BestandModus
-		</td>
-		<td>
-			<b>Content:</b> The <b>Type of stock management</b>, according to Settings » Markets » Kauflux » Basic settings.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			BestandAbsolut
-		</td>
-		<td>
-			<b>Content:</b> The <b>net stock</b> of the variation. If a variation is not limited to its net stock, the stock will be set to b>999</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Liefertyp
-		</td>
-		<td>
-			<b>Content:</b> Shippment type:	V = Versand
-		</td>
-	</tr>
-	<tr>
-		<td>
-			VersandKlasse
-		</td>
-		<td>
-			<b>Content:</b> According to the format setting <b>Shipping costs</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Lieferzeit
-		</td>
-		<td>
-			<b>Content:</b>The <b>name of the item availability</b> under <b>Settings » Item » Item availability</b> or the translation according to the format setting <b>Item availability</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Umtausch
-		</td>
-		<td>
-			<b>Content:</b> The <b>Exchange period after delivery in days</b>, according to Settings » Markets » Kauflux » Basic settings.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bezeichnung
-		</td>
-		<td>
-			<b>Content:</b> According to the format setting <b>Item name</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			KurzText
-		</td>
-		<td>
-			<b>Content:</b> According to the format setting <b>Preview text</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			DetailText
-		</td>
-		<td>
-			<b>Content:</b> According to the format setting <b>Description</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Keywords
-		</td>
-		<td>
-			<b>Content:</b> The <b>Keywords</b> of the item.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bild1
-		</td>
-		<td>
-			<b>Content:</b> The image URL. Item images are prioritizied over variation images.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bild2
-		</td>
-		<td>
-			<b>Content:</b> The image URL. Item images are prioritizied over variation images.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Bild3
-		</td>
-		<td>
-			<b>Content:</b> The image URL. Item images are prioritizied over variation images.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Gewicht
-		</td>
-		<td>
-			<b>Content:</b> The overall weight in gram.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Preis
-		</td>
-		<td>
-			<b>Content:</b> The <b>sales price</b> of the variation.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			MwSt
-		</td>
-		<td>
-			<b>Inhalt:</b> The VAT in %.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			UVP
-		</td>
-		<td>
-			<b>Content:</b> If the <b>RRP</b> is activated in the format setting and is higher than the <b>sales price</b>, the <b>RRP</b> will be exported.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Katalog1
-		</td>
-		<td>
-			<b>Content:</b> The name of the <b>category</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Flags
-		</td>
-		<td>
-			<b>Content:</b> The <b>Store special</b> of the item.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			ExtLinkDetail
-		</td>
-		<td>
-			<b>Content:</b> The <b>URL path</b> of the item depending on the chosen <b>client</b> in the format settings.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			Status
-		</td>
-		<td>
-			<b>Content:</b> Status of the item: 0=visible, 1=blocked, 2=hidden.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			FreeVar1
-		</td>
-		<td>
-			<b>Content:</b> <b>Free text field 1</b>.
-		</td>        
-	</tr>
-    <tr>
-		<td>
-			FreeVar2
-		</td>
-		<td>
-			<b>Content:</b> <b>Free text field 2</b>.
-		</td>        
-	</tr>
-    <tr>
-		<td>
-			FreeVar3
-		</td>
-		<td>
-			<b>Content:</b> <b>Free text field 3</b>.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			InhaltMenge
-		</td>
-		<td>
-			<b>Content:</b> The <b>Lot</b> of the variation (Example: 250).
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			InhaltEinheit
-		</td>
-		<td>
-			<b>Content:</b> The <b>unit</b> for the <b>lot</b> (Example: ml).
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			InhaltVergleich
-		</td>
-		<td>
-			<b>Content:</b> The comparative amount of the net content quantity for the automatic caculation of a commercial quantity.
-		</td>        
-	</tr>
-	<tr>
-		<td>
-			HerstellerArtNr
-		</td>
-		<td>
-			<b>Content:</b> The <b>Model</b> of the variation.
-		</td>        
-	</tr>
-</table>
+## 3 Available columns for the export format
+
+| **Column name** | **Explanation** |
+| :---                   | :--- |
+| ProductID              | The item ID of the variation. |
+| BestellNr              | The SKU of the variation. |
+| EAN                    | According to the format setting **Barcode**. |
+| Hersteller             | The **name of the manufacturer** of the item. The **external name** within **System » Item » Manufacturers** is preferred if existing. |
+| BestandModus           | The type of stock management, according to **System » Markets » Kauflux » Settings**. |
+| BestandAbsolut         | The net stock of the variation. If a variation is not limited to its net stock, the stock is set to **999**. |
+| Liefertyp              | Shipment type: V = Versand. |
+| VersandKlasse          | According to the format setting **Shipping costs**. |
+| Lieferzeit             | The **name of the item availability** under **System » Item » Item availability** of the translation according to the format setting **Item availability**. |
+| Umtausch               | The **exchange period** after delivery in days, according to **System » Markets » Kauflux » Settings**. |
+| Bezeichnung            | According to the format setting **Item name**. |
+| KurzText               | According to the format setting **Preview text**. |
+| DetailText             | According to the format setting **Description**. |
+| Keywords               | The keywords of the item. |
+| Bild1                  | The image URL. Item images are prioritised over variation images. |
+| Bild2                  | The image URL. Item images are prioritised over variation images. |
+| Bild3                  | The image URL. Item images are prioritised over variation images. |
+| Gewicht                | The overall weight in gram. |
+| Preis                  | The sales price of the variation. |
+| MwSt                   | The VAT in %. |
+| UVP                    | If the RRP is activated in the format setting and is higher than the sales price, the RRP is exported. |
+| Katalog1               | The name of the category. |
+| Flags                  | The store special of the item. |
+| ExtLinkDetail          | The URL path of the item depending on the chosen client in the format settings. |
+| Status                 | Status of the item: **0** = visible; **1** = blocked; **2** = hidden. |
+| FreeVar1               | Free text field 1 |
+| FreeVar2               | Free text field 2 |
+| FreeVar3               | Free text field 3 |
+| InhaltMenge            | The lot of the variation (example: 250). |
+| InhaltEinheit          | The unit for the lot (example: ml). |
+| InhaltVergleich        | The comparative amount of the net content quantity for the automatic calculation of a commercial quantity. |
+| HerstellerArtNr        | The model of the variation. |
 
 ## License
 
