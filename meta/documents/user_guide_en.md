@@ -5,20 +5,20 @@
 
 ## 1 Registering with kauflux.de
 
-Items are sold on the market kauflux.de. For further information about this market, refer to the [Kauflux](https://knowledge.plentymarkets.com/en/omni-channel/multi-channel/kauflux) page of the manual.
+Items are sold on the market kauflux.de. For further information about this market, refer to the [Kauflux](https://knowledge.plentymarkets.com/en/markets/kauflux) page of the manual.
 
 ## 2 Setting up the data format KaufluxDE-Plugin in plentymarkets
 
 By installing this plugin you will receive the export format **KaufluxDE-Plugin**. Use this format to exchange data between plentymarkets and Kauflux. It is required to install the Plugin **Elastic export** from the plentyMarketplace first before you can use the format **KaufluxDE-Plugin** in plentymarkets.
 
-Once both plugins are installed, you can create the export format **KaufluxDE-Plugin**. Refer to the [Elastic Export](https://knowledge.plentymarkets.com/en/basics/data-exchange/elastic-export) page of the manual for further details about the individual format settings.
+Once both plugins are installed, you can create the export format **KaufluxDE-Plugin**. Refer to the [Elastic Export](https://knowledge.plentymarkets.com/en/data/exporting-data/elastic-export) page of the manual for further details about the individual format settings.
 
 Creating a new export format:
 
 1. Go to **Data » Elastic export**.
 2. Click on **New export**.
 3. Carry out the settings as desired. Pay attention to the information given in table 1.
-4. **Save** the settings.
+4. **Save** the settings.<br/>
 → The export format is given an ID and it appears in the overview within the **Exports** tab.
 
 The following table lists details for settings, format settings and recommended item filters for the format **KaufluxDE-Plugin**.
@@ -40,8 +40,8 @@ The following table lists details for settings, format settings and recommended 
 | **Product URL**                                       | Choose which URL should be transferred to the price comparison portal, the item’s URL or the variation’s URL. Variation SKUs can only be transferred in combination with the Ceres store. |
 | **Client**                                            | Select a client. This setting is used for the URL structure. |
 | **URL parameter**                                     | Enter a suffix for the product URL if this is required for the export. If you have activated the transfer option for the product URL further up, then this character string will be added to the product URL. |
-| **Order referrer**                                    | Select the order referrer that should be assigned during the order import from the drop-down list. |
-| **Marketplace account**                               | Select the marketplace account from the drop-down list. The selected referrer is added to the product URL so that sales can be analysed later. |
+| **Order referrer**                                    | Select the order referrer that should be assigned during the order import from the drop-down list. The selected referrer is added to the product URL so that sales can be analysed later. |
+| **Marketplace account**                               | Select the marketplace account from the drop-down list. |
 | **Language**                                          | Select the language from the drop-down list. |
 | **Item name**                                         | Select **Name 1**, **Name 2** or **Name 3**. These names are saved in the **Texts** tab of the item. Enter a number into the **Maximum number of characters (def. Text)** field if desired. This specifies how many characters should be exported for the item name. |
 | **Preview text**                                      | This option does not affect this format. |
@@ -70,13 +70,13 @@ _Tab. 1: Settings for the data format **KaufluxDE-Plugin**_
 | ProductID              | The item ID of the variation. |
 | BestellNr              | The SKU of the variation. |
 | EAN                    | According to the format setting **Barcode**. |
-| Hersteller             | The **name of the manufacturer** of the item. The **external name** within **System » Item » Manufacturers** is preferred if existing. |
-| BestandModus           | The type of stock management, according to **System » Markets » Kauflux » Settings**. |
+| Hersteller             | The **name of the manufacturer** of the item. The **external name** within **Setup » Item » Manufacturers** is preferred if existing. |
+| BestandModus           | The type of stock management, according to **Setup » Markets » Kauflux » Settings**. |
 | BestandAbsolut         | The net stock of the variation. If a variation is not limited to its net stock, the stock is set to **999**. |
 | Liefertyp              | Shipment type: V = Versand. |
 | VersandKlasse          | According to the format setting **Shipping costs**. |
-| Lieferzeit             | The **name of the item availability** under **System » Item » Item availability** of the translation according to the format setting **Item availability**. |
-| Umtausch               | The **exchange period** after delivery in days, according to **System » Markets » Kauflux » Settings**. |
+| Lieferzeit             | The **name of the item availability** under **Setup » Item » Item availability** of the translation according to the format setting **Item availability**. |
+| Umtausch               | The **exchange period** after delivery in days, according to **Setup » Markets » Kauflux » Settings**. |
 | Bezeichnung            | According to the format setting **Item name**. |
 | KurzText               | According to the format setting **Preview text**. |
 | DetailText             | According to the format setting **Description**. |

@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export kauflux.de
 
+## v1.1.7 (2019-10-08)
+
+### Geändert
+- Der User Guide wurde aktualisiert (Form der Anrede geändert, fehlerhafte Links korrigiert).
+
 ## v1.1.6 (2019-01-22)
 
 ### Geändert
