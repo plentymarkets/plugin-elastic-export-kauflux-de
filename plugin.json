@@ -2,7 +2,7 @@
   "name": "ElasticExportKaufluxDE",
   "description": "This plugin adds the format KaufluxDE to the Elastic Export.",
   "namespace": "ElasticExportKaufluxDE",
-  "author": "plentymarkets GmbH",
+  "author": "plentysystems AG",
   "type": "export",
   "authorIcon": "icon_author_xs.png",
   "serviceProvider": "ElasticExportKaufluxDE\\ElasticExportKaufluxDEServiceProvider",
@@ -14,7 +14,7 @@
     "en": "Item export to the online market Kauflux.de via the elastic export."
   },
   "categories": ["3881"],
-  "version": "1.1.6",
+  "version": "1.1.7",
   "require": ["ElasticExport"],
   "marketplaceName": {
     "de": "kauflux.de",
