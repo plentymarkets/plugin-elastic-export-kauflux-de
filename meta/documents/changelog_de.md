@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export kauflux.de
 
+## v1.1.8 (2020-04-03)
+
+### Geändert
+- Der User Guide wurde aktualisiert (Beschreibung ins plentymarkets Handbuch umgezogen).
+
 ## v1.1.7 (2019-10-08)
 
 ### Geändert
@@ -52,7 +57,7 @@
 ### Fixed
 - An issue was fixed which caused file to be empty.
 
-## v1.0.6 (2017-08-23) 
+## v1.0.6 (2017-08-23)
 
 ### Geändert
 - Das Format-Plugin basiert nun nur noch auf Elastic Search.

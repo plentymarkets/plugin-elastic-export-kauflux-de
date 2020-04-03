@@ -14,7 +14,7 @@
     "en": "Item export to the online market Kauflux.de via the elastic export."
   },
   "categories": ["3881"],
-  "version": "1.1.7",
+  "version": "1.1.8",
   "require": ["ElasticExport"],
   "marketplaceName": {
     "de": "kauflux.de",

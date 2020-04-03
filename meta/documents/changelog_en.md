@@ -1,5 +1,11 @@
 # Release Notes for Elastic Export kauflux.de
 
+
+## v1.1.8 (2020-04-03)
+
+### Geändert
+- The user guide was updated (moved user guide to plentymarkets manual).
+
 ## v1.1.7 (2019-10-08)
 
 ### Changed
@@ -24,7 +30,7 @@
 
 ### Changed
 - The class FiltrationService is responsible for the filtration of all variations.
-- Preview images updated. 
+- Preview images updated.
 
 ## v1.1.2 (2018-02-21)
 
@@ -60,7 +66,7 @@
 ## v1.0.4 (2017-07-19)
 
 ### Fixed
-- The values for the fields "InhaltMenge", "InhaltVergleich" and "InhaltEinheit" will now be correctly exported. 
+- The values for the fields "InhaltMenge", "InhaltVergleich" and "InhaltEinheit" will now be correctly exported.
 
 ## v1.0.3 (2017-06-23)
 
@@ -87,6 +93,6 @@
 - Changed plugin icons.
 
 ## v1.0.0 (2017-02-20)
- 
+
 ### Added
 - Added initial plugin files
