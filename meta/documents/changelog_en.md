@@ -2,12 +2,12 @@
 
 ## v1.1.9 (2020-10-02)
 
-### Geändert
+### Changed
 - Updated plugin information.
 
 ## v1.1.8 (2020-04-03)
 
-### Geändert
+### Changed
 - The user guide was updated (moved user guide to plentymarkets manual).
 
 ## v1.1.7 (2019-10-08)
