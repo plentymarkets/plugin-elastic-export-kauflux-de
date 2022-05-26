@@ -176,14 +176,14 @@ class KaufluxDE extends CSVPluginGenerator
                 $resultList = $elasticSearch->execute();
 
 
-                if(count($resultList['error']) > 0)
+                if(count($resultList['error'] ?? []) > 0)
                 {
                     $this->getLogger(__METHOD__)->error('ElasticExportKaufluxDE::log.occurredElasticSearchErrors', [
                         'Error message' => $resultList['error'],
                     ]);
                 }
 
-                if(is_array($resultList['documents']) && count($resultList['documents']) > 0)
+                if(is_array($resultList['documents']) && count($resultList['documents'] ?? []) > 0)
                 {
                     $previousItemId = null;
 
@@ -329,9 +329,9 @@ class KaufluxDE extends CSVPluginGenerator
 			'KurzText' 			=> $this->elasticExportHelper->getMutatedPreviewText($variation, $settings),
 			'DetailText' 		=> $this->elasticExportHelper->getMutatedDescription($variation, $settings) . ' ' . $this->propertyHelper->getPropertyListDescription($variation, $settings->get('lang')),
 			'Keywords' 			=> $variation['data']['texts']['keywords'],
-			'Bild1' 			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
-			'Bild2' 			=> count($imageList) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
-			'Bild3' 			=> count($imageList) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
+			'Bild1' 			=> count($imageList ?? []) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
+			'Bild2' 			=> count($imageList ?? []) > 0 && array_key_exists(1, $imageList) ? $imageList[1] : '',
+			'Bild3' 			=> count($imageList ?? []) > 0 && array_key_exists(2, $imageList) ? $imageList[2] : '',
 			'Gewicht' 			=> $variation['data']['variation']['weightG'],
 			'Preis' 			=> $priceList['price'],
 			'MwSt' 				=> $priceList['vatValue'],
@@ -344,9 +344,9 @@ class KaufluxDE extends CSVPluginGenerator
 			'FreeVar1' 			=> $this->elasticExportItemHelper->getFreeFields($variation['data']['item']['id'], 1),
 			'FreeVar2' 			=> $this->elasticExportItemHelper->getFreeFields($variation['data']['item']['id'], 2),
 			'FreeVar3' 			=> $this->elasticExportItemHelper->getFreeFields($variation['data']['item']['id'], 3),
-			'InhaltMenge' 		=> count($basePriceList) ? $variation['data']['unit']['content'] : '',
-			'InhaltEinheit' 	=> count($basePriceList) ? $basePriceList['unitShortName'] : '',
-			'InhaltVergleich' 	=> count($basePriceList) ? $basePriceList['recalculatedContent'] : '',
+			'InhaltMenge' 		=> count($basePriceList ?? []) ? $variation['data']['unit']['content'] : '',
+			'InhaltEinheit' 	=> count($basePriceList ?? []) ? $basePriceList['unitShortName'] : '',
+			'InhaltVergleich' 	=> count($basePriceList ?? []) ? $basePriceList['recalculatedContent'] : '',
 			'HerstellerArtNr' 	=> $variation['data']['variation']['model'],
 		];
 
